@@ -1,10 +1,3 @@
-/*
- * result_set.cc
- *
- *  Created on: Mar 2, 2018
- *      Author: buttonfly
- */
-
 #include "simpledb.h"
 #include <string.h>
 
@@ -55,5 +48,5 @@ Buffer ResultSet::GetBlob(int index) {
 }
 
 
-} /* namespace db */
-} /* namespace util */
+} // namespace db
+} // namespace util

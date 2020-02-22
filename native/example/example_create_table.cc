@@ -1,13 +1,5 @@
-/*
- * example_create_table.cc
- *
- *  Created on: Mar 3, 2018
- *      Author: buttonfly
- */
-
 #include "simpledb.h"
 #include "log_message.h"
-// #include <glog/logging.h>
 #include <string>
 #include <unistd.h>
 
@@ -42,6 +34,3 @@ int main(int argc, char *argv[]) {
   CreateTable(db_path, SQL_CREATE_TABLE_BOUND);
   return 0;
 }
-
-
-

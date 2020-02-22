@@ -1,14 +1,6 @@
-/*
- * example_select.cc
- *
- *  Created on: Mar 3, 2018
- *      Author: buttonfly
- */
-
 #include <string>
 #include "simpledb.h"
 #include "log_message.h"
-// #include <glog/logging.h>
 
 using namespace util::db;
 

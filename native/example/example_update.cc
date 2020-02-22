@@ -1,15 +1,6 @@
-/*
- * example_update.cc
- *
- *  Created on: Mar 3, 2018
- *      Author: buttonfly
- */
-
 #include <string>
 #include "simpledb.h"
 #include "log_message.h"
-// #include <glog/logging.h>
-
 
 using namespace util::db;
 
@@ -35,4 +26,3 @@ int main(int argc, char *argv[]) {
   update_passwd(path, "1234");
   return 0;
 }
-

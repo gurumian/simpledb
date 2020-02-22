@@ -1,15 +1,6 @@
-/*
- * example_insert.cc
- *
- *  Created on: Mar 3, 2018
- *      Author: buttonfly
- */
-
-
 #include <string>
 #include "simpledb.h"
 #include "log_message.h"
-// #include <glog/logging.h>
 
 using namespace util::db;
 
@@ -25,7 +16,6 @@ int insert_default_passwd(const std::string &path) {
   }
   return 0;
 }
-
 
 int main(int argc, char *argv[]) {
   std::string path = "example.db";

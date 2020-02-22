@@ -1,22 +1,6 @@
 #include "simpledb.h"
-
-/*
- ============================================================================
- Name        : exampleProgram.c
- Author      : Sungmin Kim
- Version     :
- Copyright   : Your copyright notice
- Description : Uses shared library to print greeting
-               To run the resulting executable the LD_LIBRARY_PATH must be
-               set to ${project_loc}/libdb/.libs
-               Alternatively, libtool creates a wrapper shell script in the
-               build directory of this program which can be used to run it.
-               Here the script will be called exampleProgram.
- ============================================================================
- */
 #include "simpledb.h"
 #include "log_message.h"
-// #include <glog/logging.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -287,19 +271,6 @@ int update_passwd(const char* path, const char *passwd) {
   return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main(void) {
   const char *db_path = "./example.db";
   unlink(db_path);
@@ -320,4 +291,3 @@ int main(void) {
   update_passwd(db_path, "1234");
   return 0;
 }
-

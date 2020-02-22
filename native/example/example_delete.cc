@@ -1,10 +1,3 @@
-/*
- * example_delete.cc
- *
- *  Created on: Mar 3, 2018
- *      Author: buttonfly
- */
-
 #include <string>
 #include "simpledb.h"
 #include "log_message.h"
@@ -34,5 +27,3 @@ int main(int argc, char *argv[]) {
   delete_row_by_id(path, 1);
   return 0;
 }
-
-

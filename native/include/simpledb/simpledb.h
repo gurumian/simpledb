@@ -1,10 +1,3 @@
-/*
- * simple_event.h
- *
- *  Created on: Feb 22, 2018
- *      Author: buttonfly
- */
-
 #ifndef UTIL_DB_SIMPLE_DB_H_
 #define UTIL_DB_SIMPLE_DB_H_
 
@@ -42,11 +35,6 @@ public:
   }
 };
 
-
-
-
-
-
 class ResultSet;
 class Statement;
 class PreparedStatement;
@@ -61,9 +49,6 @@ private:
   sqlite3* conn_=nullptr;
   static bool initialized_;
 };
-
-
-
 
 class Statement {
 protected:
@@ -85,9 +70,6 @@ protected:
   sqlite3_stmt* stmt_=nullptr;
 };
 
-
-
-
 class PreparedStatement: public Statement {
 protected:
   explicit PreparedStatement(sqlite3* conn, const std::string &sql);
@@ -107,9 +89,6 @@ public:
   std::unique_ptr<ResultSet> ExecuteQuery(void) throw (SQLException);
 };
 
-
-
-
 class ResultSet {
 public:
   explicit ResultSet(sqlite3_stmt* stmt);
@@ -128,4 +107,4 @@ private:
 }
 }
 
-#endif /* UTIL_DB_SIMPLE_DB_H_ */
+#endif // UTIL_DB_SIMPLE_DB_H_

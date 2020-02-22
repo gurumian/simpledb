@@ -81,5 +81,5 @@ std::unique_ptr<ResultSet>  PreparedStatement::ExecuteQuery(void) throw (SQLExce
   return std::move(result);
 }
 
-} /* namespace db */
-} /* namespace util */
+} // namespace db
+} // namespace util

@@ -1,14 +1,6 @@
-/*
- * statement.cc
- *
- *  Created on: Mar 2, 2018
- *      Author: buttonfly
- */
-
 #include "simpledb.h"
 #include <unistd.h>
 #include "log_message.h"
-// #include <glog/logging.h>
 
 namespace util {
 namespace db {
@@ -66,5 +58,6 @@ int Statement::Prepare(const std::string &sql) {
   return err;
 }
 
-} /* namespace db */
-} /* namespace util */
+} // namespace db
+
+} // namespace util

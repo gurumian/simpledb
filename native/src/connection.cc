@@ -1,10 +1,3 @@
-/*
- * connection.cc
- *
- *  Created on: Mar 2, 2018
- *      Author: buttonfly
- */
-
 #include "simpledb.h"
 
 namespace util {
@@ -38,5 +31,5 @@ std::unique_ptr<PreparedStatement> Connection::PrepareStatement(const std::strin
   return std::move(stmt);
 }
 
-} /* namespace db */
-} /* namespace util */
+} // namespace db
+} // namespace util
