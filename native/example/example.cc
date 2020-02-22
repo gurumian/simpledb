@@ -39,8 +39,8 @@ static const unsigned char pr2six[256] =
 int Base64decode_len(const char *bufcoded)
 {
     int nbytesdecoded;
-    register const unsigned char *bufin;
-    register int nprbytes;
+    const unsigned char *bufin;
+    int nprbytes;
     bufin = (const unsigned char *) bufcoded;
     while (pr2six[*(bufin++)] <= 63);
     nprbytes = (bufin - (const unsigned char *) bufcoded) - 1;
@@ -50,9 +50,9 @@ int Base64decode_len(const char *bufcoded)
 int Base64decode(char *bufplain, const char *bufcoded)
 {
     int nbytesdecoded;
-    register const unsigned char *bufin;
-    register unsigned char *bufout;
-    register int nprbytes;
+    const unsigned char *bufin;
+    unsigned char *bufout;
+    int nprbytes;
     bufin = (const unsigned char *) bufcoded;
     while (pr2six[*(bufin++)] <= 63);
     nprbytes = (bufin - (const unsigned char *) bufcoded) - 1;
@@ -128,29 +128,22 @@ int Base64encode(char *encoded, const char *string, int len) {
 static int create_default_db_tables(const char* path) {
 
   Connection conn(path);
-  try {
-    std::unique_ptr<Statement> stmt = conn.CreateStatement();
-    assert(stmt);
-    if(!stmt->Execute(SQL_CREATE_TABLE_ADMIN)) {
-      return -1;
-    }
-
-    stmt = conn.CreateStatement();
-    assert(stmt);
-    if(!stmt->Execute(SQL_CREATE_TABLE_PRODUCT)) {
-      return -1;
-    }
-
-    stmt = conn.CreateStatement();
-    assert(stmt);
-    if(!stmt->Execute(SQL_CREATE_TABLE_BOUND)) {
-      return -1;
-    }
-
+  std::unique_ptr<Statement> stmt = conn.CreateStatement();
+  assert(stmt);
+  if(!stmt->Execute(SQL_CREATE_TABLE_ADMIN)) {
+    return -1;
   }
-  catch (SQLException& e) {
-    LOG(ERROR) <<  e.what();
-    unlink(path);
+
+  stmt = conn.CreateStatement();
+  assert(stmt);
+  if(!stmt->Execute(SQL_CREATE_TABLE_PRODUCT)) {
+    return -1;
+  }
+
+  stmt = conn.CreateStatement();
+  assert(stmt);
+  if(!stmt->Execute(SQL_CREATE_TABLE_BOUND)) {
+    return -1;
   }
   return 0;
 }
@@ -158,25 +151,20 @@ static int create_default_db_tables(const char* path) {
 int insert_default_passwd(const char* path) {
 
   Connection conn(path);
-  try {
-    auto stmt = conn.PrepareStatement("INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));");
-    // 1. sha1
-    // 2. base64
-    unsigned char sum[20+1];
-    memset(sum, 0, sizeof(sum));
-    const char* passwd= "admin";
+  auto stmt = conn.PrepareStatement("INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));");
+  // 1. sha1
+  // 2. base64
+  unsigned char sum[20+1];
+  memset(sum, 0, sizeof(sum));
+  const char* passwd= "admin";
 //                sha1((unsigned char *) passwd, strlen(passwd), (unsigned char*)sum);
-    char* base64 = (char*) malloc(Base64encode_len(20)+1);
-    memset(base64, 0 , Base64encode_len(20)+1);
-    Base64encode(base64, (const char*)sum, 20);
-    fprintf(stderr, "sha1+base64 : %s\n", base64);
-    stmt->SetString(1, base64);
-    free(base64);
-    stmt->Execute();
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) <<  e.what();
-  }
+  char* base64 = (char*) malloc(Base64encode_len(20)+1);
+  memset(base64, 0 , Base64encode_len(20)+1);
+  Base64encode(base64, (const char*)sum, 20);
+  fprintf(stderr, "sha1+base64 : %s\n", base64);
+  stmt->SetString(1, base64);
+  free(base64);
+  stmt->Execute();
   return 0;
 }
 
@@ -184,44 +172,38 @@ static bool list(const char *db_path) {
   LOG(INFO);
 
   Connection conn(db_path);
-  try {
-    std::unique_ptr<Statement> stmt = conn.CreateStatement();
-    if(!stmt) {
-      LOG(ERROR) << __func__ <<  " failed to create statement";
-      return true;
-    }
-    std::unique_ptr<ResultSet> result = stmt->ExecuteQuery("SELECT idx, price0, price1, hash, name, description, thumbnail, date FROM product");
-    if(result) {
-      while(result->Next()) {
-#if BASE64_CODE_HERE
-        const char* descr =  result->GetString(5);
-        if(descr && strlen(descr) > 0) {
-          char* data = new char[Base64decode_len(descr) +1];
-          assert(data);
-          memset(data, 0, Base64decode_len(descr) +1);
-          Base64decode(data, descr);
-          fprintf(stderr, "desc: %s\n", data);
-          delete [] data;
-          data = nullptr;
-        }
-#else
-        res["description"] =  result->GetCString(3);
-#endif
-        fprintf(stderr, "res: %d, %d, %d, %u, %s, %s, %s\n",
-            result->GetInt(0),
-            result->GetInt(1),
-            result->GetInt(2),
-            result->GetInt(3),
-            result->GetString(4),
-            result->GetString(6),
-            result->GetString(7)
-            );
-      }
-    }
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) <<  e.what();
+  auto stmt = conn.CreateStatement();
+  if(!stmt) {
+    LOG(ERROR) << __func__ <<  " failed to create statement";
     return true;
+  }
+  auto result = stmt->ExecuteQuery("SELECT idx, price0, price1, hash, name, description, thumbnail, date FROM product");
+  if(result) {
+    while(result->Next()) {
+#if BASE64_CODE_HERE
+      const char* descr =  result->GetString(5);
+      if(descr && strlen(descr) > 0) {
+        char* data = new char[Base64decode_len(descr) +1];
+        assert(data);
+        memset(data, 0, Base64decode_len(descr) +1);
+        Base64decode(data, descr);
+        fprintf(stderr, "desc: %s\n", data);
+        delete [] data;
+        data = nullptr;
+      }
+#else
+      res["description"] =  result->GetCString(3);
+#endif
+      fprintf(stderr, "res: %d, %d, %d, %u, %s, %s, %s\n",
+          result->GetInt(0),
+          result->GetInt(1),
+          result->GetInt(2),
+          result->GetInt(3),
+          result->GetString(4),
+          result->GetString(6),
+          result->GetString(7)
+          );
+    }
   }
   return true;
 }
@@ -231,28 +213,22 @@ static int auth(const char* path, const std::string &passwd) {
   LOG(INFO);
 
   Connection conn(path);
-  try {
-    std::unique_ptr<Statement> stmt = conn.CreateStatement();
-    if(!stmt) {
-      fprintf(stderr, "failed to CreateStatement\n");
-      return  -1;
-    }
-    char query[512];
-    memset(query, 0, sizeof(query));
-    sprintf(query, "SELECT passwd, date FROM admin LIMIT 1");
-    std::unique_ptr<ResultSet> result = stmt->ExecuteQuery(query);
-    if(result != NULL) {
-      if(result->Next()) {
-        if(passwd.compare(result->GetString(0)) != 0) {
-          fprintf(stderr, "Wrong password\n");
-          return -1;
-        }
+  auto stmt = conn.CreateStatement();
+  if(!stmt) {
+    fprintf(stderr, "failed to CreateStatement\n");
+    return  -1;
+  }
+  char query[512];
+  memset(query, 0, sizeof(query));
+  sprintf(query, "SELECT passwd, date FROM admin LIMIT 1");
+  auto result = stmt->ExecuteQuery(query);
+  if(result != NULL) {
+    if(result->Next()) {
+      if(passwd.compare(result->GetString(0)) != 0) {
+        fprintf(stderr, "Wrong password\n");
+        return -1;
       }
     }
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) <<  e.what();
-    return -1;
   }
   return 0;
 }
@@ -260,14 +236,9 @@ static int auth(const char* path, const std::string &passwd) {
 int update_passwd(const char* path, const char *passwd) {
   LOG(INFO);
   Connection conn(path);
-  try {
-    std::unique_ptr<PreparedStatement> stmt = conn.PrepareStatement("UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;");
-    stmt->SetString(1, passwd);
-    stmt->Execute();
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) <<  e.what();
-  }
+  auto stmt = conn.PrepareStatement("UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;");
+  stmt->SetString(1, passwd);
+  stmt->Execute();
   return 0;
 }
 

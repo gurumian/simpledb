@@ -6,14 +6,9 @@ using namespace util::db;
 
 static int update_passwd(const std::string &path, const std::string &passwd) {
   Connection conn(path);
-  try {
-    auto stmt = conn.PrepareStatement("UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;");
-    stmt->SetString(1, passwd);
-    stmt->Execute();
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) << e.what();
-  }
+  auto stmt = conn.PrepareStatement("UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;");
+  stmt->SetString(1, passwd);
+  stmt->Execute();
   return 0;
 }
 

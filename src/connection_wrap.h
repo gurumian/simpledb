@@ -14,7 +14,8 @@ class Connection : public Napi::ObjectWrap<Connection> {
  private:
   static Napi::FunctionReference constructor;
 
-  Napi::Value CreateStatement(void);
+  Napi::Value CreateStatement(const Napi::CallbackInfo& info);
+  Napi::Value PrepareStatement(const Napi::CallbackInfo& info);
 
 private:
   std::unique_ptr<util::db::Connection> connection_{};

@@ -12,15 +12,10 @@ using namespace util::db;
 
 static int CreateTable(const std::string &path, const std::string &query) {
   Connection conn(path);
-  try {
-   auto stmt = conn.CreateStatement();
-   if(!stmt->Execute(query)) {
-      LOG(FATAL) << "E: failed to create  " << query;
-      return -1;
-    }
-  }
-  catch (SQLException& e) {
-    LOG(ERROR) << e.what();
+  auto stmt = conn.CreateStatement();
+  if(!stmt->Execute(query)) {
+    LOG(FATAL) << "E: failed to create  " << query;
+    return -1;
   }
   return 0;
 }

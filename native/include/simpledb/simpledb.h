@@ -14,97 +14,82 @@ namespace db {
 
 using Buffer=std::unique_ptr<uint8_t, std::function<void(uint8_t *)>>;
 
-class NullPointerException: public std::exception {
-public:
-  virtual const char* what() const throw() {
-    return "NullPointerException";
-  }
-};
-
-class IOException: public std::exception {
-public:
-  virtual const char* what() const throw() {
-    return "IOException";
-  }
-};
-
-class SQLException: public std::exception {
-public:
-  virtual const char* what() const throw() {
-    return "SQLException";
-  }
-};
-
 class ResultSet;
 class Statement;
 class PreparedStatement;
 class Connection {
 public:
-  explicit Connection(const std::string &db_path) throw (SQLException);
+  explicit Connection(const std::string &db_path);
   virtual ~Connection();
   std::unique_ptr<Statement> CreateStatement(void);
   std::unique_ptr<PreparedStatement> PrepareStatement(const std::string &sql);
 
 private:
-  sqlite3* conn_=nullptr;
-  static bool initialized_;
+  sqlite3* conn_{nullptr};
 };
 
 class Statement {
 protected:
-  explicit Statement(sqlite3* connection);
+  explicit Statement(const sqlite3* connection);
+
+private:
+  Statement(const sqlite3* conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt);
 
 public:
-  virtual ~Statement();
+  virtual ~Statement()=default;
 
   friend class Connection;
-  bool Execute(const std::string& sql) throw (SQLException);
-  bool ExecuteUpdate(const std::string &sql) throw (SQLException);
-  std::unique_ptr<ResultSet> ExecuteQuery(const std::string& sql) throw (SQLException);
+  bool Execute(const std::string& sql);
+  bool ExecuteUpdate(const std::string &sql);
+  std::unique_ptr<ResultSet> ExecuteQuery(const std::string& sql);
+  Statement *Clone();
 
 protected:
   int Prepare(const std::string &sql);
 
 protected:
   const sqlite3* conn_;
-  sqlite3_stmt* stmt_=nullptr;
+  std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt_{};
 };
 
 class PreparedStatement: public Statement {
 protected:
-  explicit PreparedStatement(sqlite3* conn, const std::string &sql);
+  explicit PreparedStatement(const sqlite3* conn, const std::string &sql);
 
+private:
+  PreparedStatement(const sqlite3 *conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>>);
 
 public:
-  virtual ~PreparedStatement();
+  virtual ~PreparedStatement()=default;
 
   friend class Connection;
   void SetString(int index, const std::string &value);
   void SetInt(int index, int value);
-  void SetInt64(int index, int64_t value);
+  void SetInt(int index, int64_t value);
   void SetDouble(int index, double value);
   void SetBlob(int index, void *value, size_t length);
-  bool Execute(void) throw (SQLException);
-  bool ExecuteUpdate(void) throw (SQLException);
-  std::unique_ptr<ResultSet> ExecuteQuery(void) throw (SQLException);
+  bool Execute(void);
+  bool ExecuteUpdate(void);
+  std::unique_ptr<ResultSet> ExecuteQuery(void);
+  PreparedStatement *Clone();
 };
 
 class ResultSet {
 public:
-  explicit ResultSet(sqlite3_stmt* stmt);
-  virtual ~ResultSet();
+  explicit ResultSet(std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt);
   bool Next(void);
   int GetInt(int index);
   int64_t GetInt64(int index);
   double GetDouble(int index);
   Buffer GetBlob(int index);
   const char* GetString(int index);
+  ResultSet *Clone();
 
 private:
-  sqlite3_stmt* stmt_=nullptr;
+  std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt_{};
 };
 
-}
-}
+} // db
+} // util
 
 #endif // UTIL_DB_SIMPLE_DB_H_

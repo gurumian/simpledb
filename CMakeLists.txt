@@ -43,12 +43,15 @@ set(simpledb_inc_dir ${simpledb_base_dir}/native/include)
 find_package(Glog)
 
 if (GLOG_FOUND)
-	add_definitions(-DUSE_GLOG)
+	# add_definitions(-DUSE_GLOG)
 endif (GLOG_FOUND)
 
 set(simpledb_source_files
   ${simpledb_src_dir}/addon.cc
   ${simpledb_src_dir}/connection_wrap.cc
+  ${simpledb_src_dir}/statement_wrap.cc
+  ${simpledb_src_dir}/prepared_statement_wrap.cc
+  ${simpledb_src_dir}/result_set_wrap.cc
 )
 
 execute_process(COMMAND node -p "require('node-addon-api').include"

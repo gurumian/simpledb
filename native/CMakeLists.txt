@@ -49,10 +49,12 @@ include_directories(${SQLITE3_INCLUDE_DIR})
 set(LIBS ${LIBS} ${SQLITE3_LIBRARY})
 
 find_package(Glog)
-if(GLOG_FOUND)
-include_directories(${GLOG_INCLUDE_DIR})
+include_directories(${GLOG_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GLOG_LIBRARIES})
-endif(GLOG_FOUND)
+
+if (GLOG_FOUND)
+	# add_definitions(-DUSE_GLOG)
+endif (GLOG_FOUND)
 
 set(LIBS ${LIBS} ${CMAKE_DL_LIBS})
 
@@ -61,7 +63,7 @@ include_directories(${simpledb_inc_dir}/simpledb)
 include_directories(${simpledb_src_dir})
 
 #add_library(${simpledb_lib_name} STATIC SHARED ${simpledb_source_files})
-add_library(${simpledb_lib_name} SHARED ${simpledb_source_files})
+add_library(${simpledb_lib_name} STATIC ${simpledb_source_files})
 
 configure_file ("${simpledb_inc_dir}/simpledb/config.h.in"
                 "${simpledb_inc_dir}/simpledb/config.h" )

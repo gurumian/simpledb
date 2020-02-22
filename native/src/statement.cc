@@ -5,27 +5,27 @@
 namespace util {
 namespace db {
 
-Statement::Statement(sqlite3* conn)
+Statement::Statement(const sqlite3* conn)
 : conn_(conn) {
 }
 
-Statement::~Statement(){
-  if(stmt_)
-    sqlite3_finalize(stmt_);
+Statement::Statement(const sqlite3* conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt)
+: Statement(conn) {
+  stmt_ = std::move(stmt);
 }
 
-bool Statement::Execute(const std::string& sql) throw (SQLException) {
+bool Statement::Execute(const std::string& sql) {
   return ExecuteUpdate(sql);
 }
 
-bool Statement::ExecuteUpdate(const std::string &sql) throw (SQLException) {
+bool Statement::ExecuteUpdate(const std::string &sql) {
   int err;
   err = Prepare(sql);
   if(err) {
     return false;
   }
 
-  for(int ret = 0; (ret = sqlite3_step(stmt_)) != SQLITE_DONE;) {
+  for(int ret = 0; (ret = sqlite3_step(stmt_.get())) != SQLITE_DONE;) {
     if(ret == SQLITE_BUSY) {
       sleep(1);
     }
@@ -36,26 +36,37 @@ bool Statement::ExecuteUpdate(const std::string &sql) throw (SQLException) {
   return true;
 }
 
-std::unique_ptr<ResultSet> Statement::ExecuteQuery(const std::string &sql) throw (SQLException) {
-  int err;
+std::unique_ptr<ResultSet> Statement::ExecuteQuery(const std::string &sql) {
+  int err{0};
   err = Prepare(sql);
   if(err) {
+    LOG(ERROR) << __func__ << " failed to Prepare()";
     return nullptr;
   }
 
-  std::unique_ptr<ResultSet> result(new ResultSet(stmt_));
-  return std::move(result);
+  std::unique_ptr<ResultSet> result{new ResultSet(std::move(stmt_))};
+  return result;
 }
 
 int Statement::Prepare(const std::string &sql) {
-  char* error = NULL;
-  int err = sqlite3_prepare_v2((sqlite3*)conn_, sql.c_str(), sql.length(), &stmt_, (const char**)&error);
+  char* error{};
+  sqlite3_stmt *stmt{};
+  int err = sqlite3_prepare_v2((sqlite3*)conn_, sql.c_str(), sql.length(), &stmt, (const char**)&error);
   if(err) {
-    LOG(ERROR) << " E: sqlite3_prepare: " << error;
+    LOG(ERROR) << " sqlite3_prepare: " << err << ", " << error;
     if(error) sqlite3_free(error);
   }
 
+  stmt_ = std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> {
+    stmt,
+    [](sqlite3_stmt *ptr){ if(ptr) sqlite3_finalize(ptr);}
+  };
+
   return err;
+}
+
+Statement *Statement::Clone() {
+  return new Statement(conn_, std::move(stmt_));
 }
 
 } // namespace db

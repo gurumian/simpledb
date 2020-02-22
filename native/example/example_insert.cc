@@ -6,14 +6,9 @@ using namespace util::db;
 
 int insert_default_passwd(const std::string &path) {
   Connection conn(path);
-  try {
-    auto stmt = conn.PrepareStatement("INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));");
-    stmt->SetString(1, "admin_passwd");
-    stmt->Execute();
-  }
-  catch(SQLException& e) {
-    LOG(ERROR) << e.what();
-  }
+  auto stmt = conn.PrepareStatement("INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));");
+  stmt->SetString(1, "admin_passwd");
+  stmt->Execute();
   return 0;
 }
 

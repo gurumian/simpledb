@@ -3,17 +3,16 @@
 namespace util {
 namespace db {
 
-bool Connection::initialized_= false;
-
-Connection::Connection(const std::string &db_path) throw (SQLException){
+Connection::Connection(const std::string &db_path){
+  static bool initialized_{false};
   if(! initialized_) {
     sqlite3_initialize();
     initialized_=true;
   }
 
-  if(sqlite3_open_v2(db_path.c_str(), &conn_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL ) != SQLITE_OK) {
-    throw SQLException();
-  }
+  int err{0};
+  err = sqlite3_open_v2(db_path.c_str(), &conn_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+  assert(!err);
 }
 
 Connection::~Connection() {
@@ -23,7 +22,7 @@ Connection::~Connection() {
 
 std::unique_ptr<Statement> Connection::CreateStatement(void) {
   std::unique_ptr<Statement> stmt(new Statement(conn_));
-  return std::move(stmt);
+  return stmt;
 }
 
 std::unique_ptr<PreparedStatement> Connection::PrepareStatement(const std::string &sql){
@@ -32,4 +31,5 @@ std::unique_ptr<PreparedStatement> Connection::PrepareStatement(const std::strin
 }
 
 } // namespace db
+
 } // namespace util
