@@ -1,0 +1,47 @@
+{
+  "name": "simpledb",
+  "version": "0.0.1",
+  "description": "Node.js sqlite3 wrapper",
+  "main": "node/index.js",
+  "files": [
+    "lib/",
+    "index.js",
+    "native",
+    "src",
+    "CMakeLists.txt"
+  ],
+  "keywords": [
+    "sqlite",
+    "db",
+    "database"
+  ],
+  "author": "Bryce Ghim",
+  "homepage": "https://github.com/gurumian/simpledb",
+  "bugs": {
+    "url": "https://github.com/gurumian/simpledb/issues",
+    "email": "gurumian@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bindings": "~1.2.1",
+    "node-addon-api": "^1.0.0"
+  },
+  "scripts": {
+    "install": "cmake-js compile",
+    "test": "mocha"
+  },
+  "gypfile": true,
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gurumian/simpledb.git"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "cmake-js": "^6.0.0",
+    "mocha": "^7.0.1"
+  }
+}
