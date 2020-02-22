@@ -39,19 +39,11 @@ PreparedStatement::PreparedStatement(const Napi::CallbackInfo& info) : Napi::Obj
   }
 
   auto stat = info[0].As<Napi::External<util::db::PreparedStatement>>();
-  stat_ = stat.Data();
+  stat_ = std::unique_ptr<util::db::PreparedStatement>{stat.Data()};
   assert(stat_);
 }
 
-PreparedStatement::~PreparedStatement() {
-  LOG(INFO) << __func__;
-  if(stat_)
-    delete stat_;
-  stat_ = nullptr;
-}
-
 Napi::Object PreparedStatement::NewInstance(Napi::Env env, Napi::Value arg) {
-  LOG(INFO) << __func__;
   Napi::EscapableHandleScope scope(env);
   Napi::Object obj = constructor.New({arg});
   return scope.Escape(napi_value(obj)).ToObject();
@@ -122,8 +114,8 @@ void PreparedStatement::SetInt(const Napi::CallbackInfo& info) {
     return;
   }
 
-  if(!static_cast<Napi::Value>(obj["value"]).IsString()) {
-    Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
+  if(!static_cast<Napi::Value>(obj["value"]).IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
   int value = (int) static_cast<Napi::Value>(obj["value"]).ToNumber();
@@ -154,8 +146,8 @@ void PreparedStatement::SetInt64(const Napi::CallbackInfo& info) {
     return;
   }
 
-  if(!static_cast<Napi::Value>(obj["value"]).IsString()) {
-    Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
+  if(!static_cast<Napi::Value>(obj["value"]).IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
   int64_t value = (int64_t) static_cast<Napi::Value>(obj["value"]).ToNumber();
@@ -186,8 +178,8 @@ void PreparedStatement::SetDouble(const Napi::CallbackInfo& info) {
     return;
   }
 
-  if(!static_cast<Napi::Value>(obj["value"]).IsString()) {
-    Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
+  if(!static_cast<Napi::Value>(obj["value"]).IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
   double value = (double) static_cast<Napi::Value>(obj["value"]).ToNumber();
@@ -222,10 +214,6 @@ void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "ArrayBuufer expected").ThrowAsJavaScriptException();
     return;
   }
-  // double value = (double) static_cast<Napi::Value>(obj["value"]).As;
-  // stat_->SetDouble(index, value);
-
-
   // void SetBlob(int index, void *value, size_t length);
 }
 

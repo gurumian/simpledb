@@ -8,7 +8,6 @@ var should = chai.should();  // Using Should style
 const fs = require('fs')
 
 const db = './test/example.db'
-// modify this properly
 
 describe('All', function() {
 
@@ -19,50 +18,54 @@ describe('All', function() {
 
   describe('Connection', function() {
     let connection = new Connection(db);
-    it('should return -1 when the value is not present', function() {
-      let stat = connection.createStatement();
-      let res = stat.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);');
+    it('should return -1 when create() is failed', function() {
+      let stmt = connection.createStatement();
+      let res = stmt.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);');
       console.log(res);
     });
 
-    it('should return -1 when the value is not present', function() {
-      let stat = connection.prepareStatement('INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));');
-      stat.setInt({
+    it('should return -1 when insert() is failed', function() {
+      let stmt = connection.prepareStatement('INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));');
+      stmt.setString({
         index: 1,
         value: 'admin_passwd',
       });
 
-      let res = stat.execute();
+      let res = stmt.execute();
       console.log(res);
       assert.equal(res, true);
     });
 
-    it('should return -1 when the value is not present', function() {
-      let stat = connection.createStatement();
-      let res = stat.executeQuery('SELECT idx, passwd, date FROM admin');
+    it('should return -1 when select() is failed', function() {
+      let stmt = connection.createStatement();
+      let res = stmt.executeQuery('SELECT idx, passwd, date FROM admin');
       console.log(res);
-      // assert.equal(res, true);
+
+      while(res.next()) {
+        console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
+      }
     });
 
-    // TODO:
+    it('should return -1 when update() is failed', function() {
+      let stmt = connection.prepareStatement('UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;');
+      stmt.setString({
+        index: 1,
+        value: 'passcode',
+      });
+      let res = stmt.execute();
+      console.log(res);
+    });
+
+
+    it('should return -1 when delete() is failed', function() {
+      let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
+      let id = 1;
+      stmt.setInt({
+        index: 1,
+        value: id,
+      });
+      let res = stmt.execute();
+      console.log(res);
+    });
   });
 });
-
-
-
-// auto stmt = conn.CreateStatement();
-//   if(!stmt) {
-//     LOG(ERROR) << __func__ <<  " failed to create statement";
-//     return true;
-//   }
-
-//   auto result = stmt->ExecuteQuery("SELECT idx, passwd, date FROM admin");
-//   if(result) {
-//     while(result->Next()) {
-//       fprintf(stderr, "res: %d, %s, %s\n",
-//           result->GetInt(0),
-//           result->GetString(1),
-//           result->GetString(2)
-//           );
-//     }
-//   }

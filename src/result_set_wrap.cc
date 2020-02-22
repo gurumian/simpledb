@@ -12,8 +12,12 @@ Napi::Object ResultSet::Init(Napi::Env env, Napi::Object exports) {
       DefineClass(env,
                   "ResultSet",
                   {
-                    // InstanceMethod("execute", &Statement::Execute),
-                    // InstanceMethod("executeQuery", &Statement::ExecuteQuery),
+                    InstanceMethod("next", &ResultSet::Next),
+                    InstanceMethod("getInt", &ResultSet::GetInt),
+                    InstanceMethod("getInt64", &ResultSet::GetInt64),
+                    InstanceMethod("getString", &ResultSet::GetString),
+                    InstanceMethod("getDouble", &ResultSet::GetDouble),
+                    InstanceMethod("getBlob", &ResultSet::GetBlob),
                   });
 
   constructor = Napi::Persistent(func);
@@ -35,20 +39,78 @@ ResultSet::ResultSet(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ResultSe
   }
 
   auto res = info[0].As<Napi::External<util::db::ResultSet>>();
-  res_ = res.Data();
+  res_ = std::unique_ptr<util::db::ResultSet>{res.Data()};
   assert(res_);
 }
 
-ResultSet::~ResultSet() {
-  LOG(INFO) << __func__;
-  if(res_)
-    delete res_;
-  res_ = nullptr;
-}
-
 Napi::Object ResultSet::NewInstance(Napi::Env env, Napi::Value arg) {
-  LOG(INFO) << __func__;
   Napi::EscapableHandleScope scope(env);
   Napi::Object obj = constructor.New({arg});
   return scope.Escape(napi_value(obj)).ToObject();
+}
+
+Napi::Value ResultSet::Next(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  return Napi::Boolean::New(info.Env(), res_->Next());
+}
+
+Napi::Value ResultSet::GetInt(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  auto index = (int)info[0].ToNumber();
+  return Napi::Number::New(info.Env(), res_->GetInt(index));
+}
+
+Napi::Value ResultSet::GetString(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  auto index = (int)info[0].ToNumber();
+  return Napi::String::New(info.Env(), res_->GetString(index));
+
+}
+
+Napi::Value ResultSet::GetInt64(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  auto index = (int)info[0].ToNumber();
+  return Napi::Number::New(info.Env(), res_->GetInt64(index));
+
+}
+
+Napi::Value ResultSet::GetDouble(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  auto index = (int)info[0].ToNumber();
+  return Napi::Number::New(info.Env(), res_->GetDouble(index));
+}
+
+Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  // if (info.Length() <= 0 || !info[0].IsNumber()) {
+  //   Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+  //   return env.Undefined();
+  // }
+
+  // auto index = (int)info[0].ToNumber();
+  // auto blob = res_->GetBlob(index);
+
+  // Napi::ArrayBuffer::New(env, (frame_->data[ch] + data_size_per_sample*i), data_size_per_sample);
+  // return Napi::Number::New(info.Env(), res_->GetBlob(index));
 }

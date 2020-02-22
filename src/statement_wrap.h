@@ -10,7 +10,6 @@ class Statement : public Napi::ObjectWrap<Statement> {
  public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   Statement(const Napi::CallbackInfo& info);
-  virtual ~Statement();
 
   static Napi::Object NewInstance(Napi::Env env, Napi::Value arg);
 
@@ -22,7 +21,7 @@ private:
   Napi::Value ExecuteQuery(const Napi::CallbackInfo& info);
 
 private:
-  util::db::Statement *stat_{};
+  std::unique_ptr<util::db::Statement> stat_{};
 };
 
 #endif // GURUM_STATEMENT_WRAP_H

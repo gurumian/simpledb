@@ -36,19 +36,11 @@ Statement::Statement(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Statemen
   }
 
   auto stat = info[0].As<Napi::External<util::db::Statement>>();
-  stat_ = stat.Data();
+  stat_ = std::unique_ptr<util::db::Statement>{stat.Data()};
   assert(stat_);
 }
 
-Statement::~Statement() {
-  LOG(INFO) << __func__;
-  if(stat_)
-    delete stat_;
-  stat_ = nullptr;
-}
-
 Napi::Object Statement::NewInstance(Napi::Env env, Napi::Value arg) {
-  LOG(INFO) << __func__;
   Napi::EscapableHandleScope scope(env);
   Napi::Object obj = constructor.New({arg});
   return scope.Escape(napi_value(obj)).ToObject();
@@ -63,7 +55,6 @@ Napi::Value Statement::Execute(const Napi::CallbackInfo& info) {
   }
 
   auto query = info[0].ToString().Utf8Value();
-  LOG(INFO) << __func__ << " query: " << query;
 
   assert(stat_);
   bool result = stat_->Execute(query);
@@ -79,7 +70,6 @@ Napi::Value Statement::ExecuteQuery(const Napi::CallbackInfo& info) {
   }
 
   auto query = info[0].ToString().Utf8Value();
-  LOG(INFO) << __func__ << " query: " << query;
 
   assert(stat_);
   auto res = stat_->ExecuteQuery(query)->Clone();

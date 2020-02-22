@@ -10,7 +10,6 @@ class PreparedStatement : public Napi::ObjectWrap<PreparedStatement> {
  public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   PreparedStatement(const Napi::CallbackInfo& info);
-  virtual ~PreparedStatement();
 
   static Napi::Object NewInstance(Napi::Env env, Napi::Value arg);
 
@@ -27,7 +26,7 @@ private:
   Napi::Value ExecuteUpdate(const Napi::CallbackInfo& info);
 
 private:
-  util::db::PreparedStatement *stat_{};
+  std::unique_ptr<util::db::PreparedStatement> stat_{};
 };
 
 #endif // GURUM_PREPARED_STATEMENT_WRAP_H
