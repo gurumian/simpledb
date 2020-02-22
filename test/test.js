@@ -21,7 +21,7 @@ describe('All', function() {
     it('should return -1 when create() is failed', function() {
       let stmt = connection.createStatement();
       let res = stmt.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);');
-      console.log(res);
+      assert.equal(res, true);
     });
 
     it('should return -1 when insert() is failed', function() {
@@ -32,18 +32,19 @@ describe('All', function() {
       });
 
       let res = stmt.execute();
-      console.log(res);
       assert.equal(res, true);
     });
 
     it('should return -1 when select() is failed', function() {
       let stmt = connection.createStatement();
       let res = stmt.executeQuery('SELECT idx, passwd, date FROM admin');
-      console.log(res);
 
-      while(res.next()) {
-        console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
-      }
+      assert.equal(res.next(), true);
+      assert.equal(res.getInt(0), 1);
+
+      // while(res.next()) {
+      //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
+      // }
     });
 
     it('should return -1 when update() is failed', function() {
@@ -53,7 +54,7 @@ describe('All', function() {
         value: 'passcode',
       });
       let res = stmt.execute();
-      console.log(res);
+      assert.equal(res, true);
     });
 
 
@@ -65,7 +66,7 @@ describe('All', function() {
         value: id,
       });
       let res = stmt.execute();
-      console.log(res);
+      assert.equal(res, true);
     });
   });
 });
