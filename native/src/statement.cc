@@ -12,6 +12,7 @@ Statement::Statement(const sqlite3* conn)
 Statement::Statement(const sqlite3* conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt)
 : Statement(conn) {
   stmt_ = std::move(stmt);
+  assert(stmt_);
 }
 
 bool Statement::Execute(const std::string& sql) {
