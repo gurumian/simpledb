@@ -51,10 +51,8 @@ Napi::Object PreparedStatement::NewInstance(Napi::Env env, Napi::Value arg) {
 
 Napi::Value PreparedStatement::Execute(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  assert(stat_);
 
   auto deferred = Napi::Promise::Deferred::New(env);
-  assert(stat_);
   bool res = stat_->Execute();
   if(res) {
     deferred.Resolve(Napi::Boolean::New(env, res));
@@ -228,7 +226,6 @@ void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
 Napi::Value PreparedStatement::ExecuteUpdate(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   auto deferred = Napi::Promise::Deferred::New(env);
-  assert(stat_);
   bool res = stat_->ExecuteUpdate();
   if(res) {
     deferred.Resolve(Napi::Boolean::New(env, res));
