@@ -25,7 +25,7 @@ public:
   std::unique_ptr<PreparedStatement> PrepareStatement(const std::string &sql);
 
 private:
-  sqlite3* conn_{nullptr};
+  sqlite3* conn_{};
 };
 
 class Statement {
