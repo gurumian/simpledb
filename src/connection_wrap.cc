@@ -24,8 +24,6 @@ Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
 
   exports.Set("Connection", func);
 
-  sqlite3_initialize();
-
   return exports;
 }
 
