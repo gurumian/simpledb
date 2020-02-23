@@ -44,7 +44,9 @@ set(simpledb_inc_dir ${simpledb_base_dir}/native/include)
 find_package(Glog)
 
 if (GLOG_FOUND)
-	# add_definitions(-DUSE_GLOG)
+add_definitions(-DUSE_GLOG)
+include_directories(${GLOG_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${GLOG_LIBRARIES})
 endif (GLOG_FOUND)
 
 set(simpledb_source_files
