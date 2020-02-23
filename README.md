@@ -21,6 +21,8 @@ See `example/`
 
 ### CREATE
 ```js
+const {Connection} = require('simpledb');
+
 let connection = new Connection(db);
 let stmt = connection.createStatement();
 stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
