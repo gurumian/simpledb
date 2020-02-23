@@ -16,8 +16,9 @@ describe('All', function() {
     fs.unlinkSync(db);
   }
 
+  let connection = new Connection(db);
+
   describe('Connection', function() {
-    let connection = new Connection(db);
     it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
       stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
@@ -108,5 +109,25 @@ describe('All', function() {
       });
     });
 
+  });
+
+  describe('Performance', function() {
+    it('should return false when insert() is failed', function() {
+      for(var i = 0; i < 100; i++) {
+        let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
+        stmt.setString({
+          index: 1,
+          value: 'admin_passwd',
+        });
+
+        stmt.execute()
+        .then(res => {
+          assert.equal(res, true);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      }
+    });
   });
 });
