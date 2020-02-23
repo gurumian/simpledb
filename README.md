@@ -21,6 +21,7 @@ See `example/`
 
 ### CREATE
 ```js
+let connection = new Connection(db);
 let stmt = connection.createStatement();
 stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
 .then(res => {
@@ -33,6 +34,7 @@ stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passw
 
 ### INSERT
 ```js
+let connection = new Connection(db);
 let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
 stmt.setString({
   index: 1,
@@ -50,6 +52,7 @@ stmt.execute()
 
 ### SELECT
 ```js
+let connection = new Connection(db);
 let stmt = connection.createStatement();
 stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 .then(res => {
@@ -64,6 +67,7 @@ stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 
 ### UPDATE
 ```js
+let connection = new Connection(db);
 let stmt = connection.prepareStatement(`UPDATE ${table} set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;`);
 stmt.setString({
   index: 1,
@@ -80,6 +84,7 @@ stmt.execute()
 
 ### DELETE
 ```js
+let connection = new Connection(db);
 let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
 let id = 1;
 stmt.setInt({
