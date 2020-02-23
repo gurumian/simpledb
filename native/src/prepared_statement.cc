@@ -13,12 +13,11 @@ PreparedStatement::PreparedStatement(const sqlite3* connection, const std::strin
 }
 
 PreparedStatement::PreparedStatement(const sqlite3* conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt)
-: Statement(conn) {
-  stmt_ = std::move(stmt);
+: Statement(conn, std::move(stmt)) {
 }
 
 void PreparedStatement::SetString(int index, const std::string &value) {
-  int err = sqlite3_bind_text(stmt_.get(), index, value.c_str(), value.length(), SQLITE_STATIC);
+  int err = sqlite3_bind_text(stmt_.get(), index, value.c_str(), value.length(), SQLITE_TRANSIENT);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }

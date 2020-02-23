@@ -95,8 +95,7 @@ void PreparedStatement::SetString(const Napi::CallbackInfo& info) {
     return;
   }
   Napi::String value = static_cast<Napi::Value>(obj["value"]).ToString();
-
-  stat_->SetString(index, value.ToString().Utf8Value()); 
+  stat_->SetString(index, value.Utf8Value());
 }
 
 void PreparedStatement::SetInt(const Napi::CallbackInfo& info) {

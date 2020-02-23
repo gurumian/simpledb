@@ -103,14 +103,14 @@ Napi::Value ResultSet::GetDouble(const Napi::CallbackInfo& info) {
 
 Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  // if (info.Length() <= 0 || !info[0].IsNumber()) {
-  //   Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
-  //   return env.Undefined();
-  // }
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
 
-  // auto index = (int)info[0].ToNumber();
-  // auto blob = res_->GetBlob(index);
+  auto index = (int)info[0].ToNumber();
+  auto blob = res_->GetBlob(index);
 
   // Napi::ArrayBuffer::New(env, (frame_->data[ch] + data_size_per_sample*i), data_size_per_sample);
-  // return Napi::Number::New(info.Env(), res_->GetBlob(index));
+  return Napi::Number::New(info.Env(), 0);
 }

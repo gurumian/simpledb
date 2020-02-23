@@ -25,14 +25,14 @@ public:
   std::unique_ptr<PreparedStatement> PrepareStatement(const std::string &sql);
 
 private:
-  sqlite3* conn_{nullptr};
+  sqlite3* conn_{};
 };
 
 class Statement {
 protected:
   explicit Statement(const sqlite3* connection);
 
-private:
+protected:
   Statement(const sqlite3* conn, std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt);
 
 public:
