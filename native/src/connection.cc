@@ -1,4 +1,5 @@
 #include "simpledb.h"
+#include <cassert>
 
 namespace util {
 namespace db {

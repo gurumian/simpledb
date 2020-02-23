@@ -33,6 +33,7 @@ set(CMAKE_MODULE_PATH
 set(BUILD_EXAMPLE OFF CACHE BOOL "Build example")
 add_subdirectory(native)
 
+find_package(SQLite3)
 include_directories(${SQLITE3_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${SQLITE3_LIBRARIES})
 
@@ -70,4 +71,4 @@ include_directories(${simpledb_base_dir}/native/src)
 include_directories(${CMAKE_JS_INC})
 add_library(simpledb SHARED ${simpledb_source_files} ${CMAKE_JS_SRC})
 set_target_properties(simpledb PROPERTIES PREFIX "" SUFFIX ".node")
-target_link_libraries(simpledb ${CMAKE_JS_LIB} simpledb_native)
+target_link_libraries(simpledb ${CMAKE_JS_LIB} simpledb_native ${LIBS})

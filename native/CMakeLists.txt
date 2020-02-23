@@ -63,7 +63,7 @@ include_directories(${simpledb_inc_dir}/simpledb)
 include_directories(${simpledb_src_dir})
 
 #add_library(${simpledb_lib_name} STATIC SHARED ${simpledb_source_files})
-add_library(${simpledb_lib_name} STATIC ${simpledb_source_files})
+add_library(${simpledb_lib_name} SHARED ${simpledb_source_files})
 
 configure_file ("${simpledb_inc_dir}/simpledb/config.h.in"
                 "${simpledb_inc_dir}/simpledb/config.h" )
