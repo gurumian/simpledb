@@ -51,6 +51,7 @@ describe('All', function() {
       .then(res => {
         assert.equal(res.next(), true);
         assert.equal(res.getInt(0), 1);
+        assert.equal(res.getString(1), 'admin_passwd');
         // {
         //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
         // }
@@ -81,7 +82,6 @@ describe('All', function() {
       .then(res => {
         assert.equal(res.next(), true);
         assert.equal(res.getInt(0), 1);
-        //console.log(res.getString(1));
         assert.equal(res.getString(1), 'new_passcode');
         // {
         //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
