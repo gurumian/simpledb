@@ -20,8 +20,10 @@ describe('All', function() {
     let connection = new Connection(db);
     it('should return -1 when create() is failed', function() {
       let stmt = connection.createStatement();
-      let res = stmt.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);');
-      assert.equal(res, true);
+      stmt.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);')
+      .then(res => {
+        assert.equal(res, true);
+      });
     });
 
     it('should return -1 when insert() is failed', function() {
@@ -31,20 +33,20 @@ describe('All', function() {
         value: 'admin_passwd',
       });
 
-      let res = stmt.execute();
-      assert.equal(res, true);
+      stmt.execute().then(res => {
+        assert.equal(res, true);
+      });
     });
 
     it('should return -1 when select() is failed', function() {
       let stmt = connection.createStatement();
-      let res = stmt.executeQuery('SELECT idx, passwd, date FROM admin');
-
-      assert.equal(res.next(), true);
-      assert.equal(res.getInt(0), 1);
-
-      // while(res.next()) {
-      //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
-      // }
+      stmt.executeQuery('SELECT idx, passwd, date FROM admin').then(res => {
+        assert.equal(res.next(), true);
+        assert.equal(res.getInt(0), 1);
+        // {
+        //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
+        // }
+      });
     });
 
     it('should return -1 when update() is failed', function() {
@@ -53,8 +55,9 @@ describe('All', function() {
         index: 1,
         value: 'passcode',
       });
-      let res = stmt.execute();
-      assert.equal(res, true);
+      stmt.execute().then(res =>{
+        assert.equal(res, true);
+      });
     });
 
 
@@ -65,8 +68,9 @@ describe('All', function() {
         index: 1,
         value: id,
       });
-      let res = stmt.execute();
-      assert.equal(res, true);
+      stmt.execute().then(res => {
+        assert.equal(res, true);
+      });
     });
   });
 });

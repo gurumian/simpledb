@@ -56,9 +56,16 @@ Napi::Value Statement::Execute(const Napi::CallbackInfo& info) {
 
   auto query = info[0].ToString().Utf8Value();
 
+  auto deferred = Napi::Promise::Deferred::New(env);
   assert(stat_);
-  bool result = stat_->Execute(query);
-  return Napi::Boolean::New(env, result);
+  bool res = stat_->Execute(query);
+  if(res) {
+    deferred.Resolve(Napi::Boolean::New(env, res));
+  }
+  else {
+    deferred.Reject(Napi::Error::New(env, "Error on executing").Value());
+  }
+  return deferred.Promise();
 }
 
 Napi::Value Statement::ExecuteQuery(const Napi::CallbackInfo& info) {
@@ -71,8 +78,14 @@ Napi::Value Statement::ExecuteQuery(const Napi::CallbackInfo& info) {
 
   auto query = info[0].ToString().Utf8Value();
 
+  auto deferred = Napi::Promise::Deferred::New(env);
   assert(stat_);
   auto res = stat_->ExecuteQuery(query)->Clone();
-  assert(res);
-  return ResultSet::NewInstance(env, Napi::External<util::db::ResultSet>::New(env, res));
+  if(res) {
+    deferred.Resolve(ResultSet::NewInstance(env, Napi::External<util::db::ResultSet>::New(env, res)));
+  }
+  else {
+    deferred.Reject(Napi::Error::New(env, "Error on executing").Value());
+  }
+  return deferred.Promise();
 }
