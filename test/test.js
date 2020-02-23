@@ -17,7 +17,7 @@ describe('All', function() {
 
   describe('Connection', function() {
     let connection = new Connection(db);
-    it('should return -1 when create() is failed', function() {
+    it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
       stmt.execute('CREATE TABLE admin(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);')
       .then(res => {
@@ -25,7 +25,7 @@ describe('All', function() {
       });
     });
 
-    it('should return -1 when insert() is failed', function() {
+    it('should return false when insert() is failed', function() {
       let stmt = connection.prepareStatement('INSERT INTO admin (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));');
       stmt.setString({
         index: 1,
@@ -37,7 +37,7 @@ describe('All', function() {
       });
     });
 
-    it('should return -1 when select() is failed', function() {
+    it('should return error when select() is failed', function() {
       let stmt = connection.createStatement();
       stmt.executeQuery('SELECT idx, passwd, date FROM admin').then(res => {
         assert.equal(res.next(), true);
@@ -48,7 +48,7 @@ describe('All', function() {
       });
     });
 
-    it('should return -1 when update() is failed', function() {
+    it('should return false when update() is failed', function() {
       let stmt = connection.prepareStatement('UPDATE admin set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;');
       stmt.setString({
         index: 1,
@@ -60,7 +60,7 @@ describe('All', function() {
     });
 
 
-    it('should return -1 when delete() is failed', function() {
+    it('should return false when delete() is failed', function() {
       let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
       let id = 1;
       stmt.setInt({
