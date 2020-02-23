@@ -13,7 +13,6 @@ describe('All', function() {
 
   if (fs.existsSync(db)) {
     fs.unlinkSync(db);
-    return;
   }
 
   describe('Connection', function() {
