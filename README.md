@@ -21,11 +21,10 @@ See `example/`
 
 ### CREATE
 ```js
-let connection = new Connection(db);
 let stmt = connection.createStatement();
 stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
 .then(res => {
-  assert.equal(res, true);
+  console.log(`create: {res}`);
 })
 .catch(err => {
   console.log(err);
@@ -37,12 +36,12 @@ stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passw
 let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
 stmt.setString({
   index: 1,
-  value: 'admin_passwd',
+  value: `admin_passwd${i}`,
 });
 
 stmt.execute()
 .then(res => {
-  assert.equal(res, true);
+  console.log(`insert: {res}`);
 })
 .catch(err => {
   console.log(err);
@@ -52,14 +51,11 @@ stmt.execute()
 ### SELECT
 ```js
 let stmt = connection.createStatement();
-stmt.executeQuery(`SELECT idx, passwd, date FROM ${table}`)
+stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 .then(res => {
-  assert.equal(res.next(), true);
-  assert.equal(res.getInt(0), 1);
-  assert.equal(res.getString(1), 'admin_passwd');
-  // {
-  //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
-  // }
+  while(res.next()) {
+    console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
+  }
 })
 .catch(err => {
   console.log(err);
@@ -75,7 +71,7 @@ stmt.setString({
 });
 stmt.execute()
 .then(res =>{
-  assert.equal(res, true);
+  console.log(`update: {res}`);
 })
 .catch(err => {
   console.log(err);
@@ -92,7 +88,7 @@ stmt.setInt({
 });
 stmt.execute()
 .then(res => {
-  assert.equal(res, true);
+  console.log(`delete: ${res}`);
 })
 .catch(err => {
   console.log(err);

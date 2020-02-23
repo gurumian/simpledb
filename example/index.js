@@ -65,6 +65,21 @@ function select() {
   });
 }
 
+// UPDATE
+function update() {
+  let stmt = connection.prepareStatement(`UPDATE ${table} set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;`);
+  stmt.setString({
+    index: 1,
+    value: 'new_passcode',
+  });
+  stmt.execute()
+  .then(res =>{
+    console.log(res);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
 
 // DELETE id=1
 function remove() {
@@ -87,4 +102,5 @@ function remove() {
 create();
 insert();
 select();
+update();
 remove();
