@@ -4,7 +4,7 @@ var args = process.argv.slice(2);
 console.log('args: ', args);
 
 
-const {Connection} = require('simpledb');
+const {Connection} = require('simpledbc');
 
 var db = 'example.db'
 if(args.length) {
