@@ -23,7 +23,7 @@ private:
   Napi::Value GetInt64(const Napi::CallbackInfo& info);
   Napi::Value GetDouble(const Napi::CallbackInfo& info);
   Napi::Value GetBlob(const Napi::CallbackInfo& info);
-
+  Napi::Value Get(const Napi::CallbackInfo& info);
 
 private:
   std::unique_ptr<util::db::ResultSet> res_{};
