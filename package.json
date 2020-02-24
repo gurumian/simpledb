@@ -4,7 +4,6 @@
   "description": "Node.js sqlite3 wrapper",
   "main": "node/index.js",
   "files": [
-    "lib/",
     "index.js",
     "native",
     "src",
