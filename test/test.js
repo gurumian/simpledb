@@ -88,7 +88,6 @@ describe('All', function() {
         bufView[i] = str.charCodeAt(i);
       }
 
-      // console.log(arraybuffer);
       stmt.setBlob({
         index: 2,
         value: arraybuffer,
@@ -133,7 +132,7 @@ describe('All', function() {
         value: 'new_passcode',
       });
       stmt.execute()
-      .then(res =>{
+      .then(res => {
         assert.equal(res, true);
       })
       .catch(err => {
@@ -156,7 +155,7 @@ describe('All', function() {
     });
 
     it('should return false when delete() is failed', function() {
-      let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
+      let stmt = connection.prepareStatement(`DELETE FROM ${table} WHERE idx=?;`);
       let id = 2;
       stmt.setInt({
         index: 1,
@@ -174,7 +173,7 @@ describe('All', function() {
     it('should return false when delete() is failed', function() {
       let stmt = connection.createStatement();
       let id = 1;
-      stmt.execute(`DELETE FROM admin WHERE idx=${id};`)
+      stmt.execute(`DELETE FROM ${table} WHERE idx=${id};`)
       .then(res => {
         assert.equal(res, true);
       })
@@ -183,7 +182,7 @@ describe('All', function() {
 
   describe('Performance', function() {
     it('should return false when insert() is failed', function() {
-      for(var i = 0; i < 100; i++) {
+      for(var i = 0; i < 1000; i++) {
         let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
         stmt.setString({
           index: 1,
@@ -199,5 +198,45 @@ describe('All', function() {
         });
       }
     });
+
+    it('should return false when delete() is failed', function() {
+      let stmt = connection.createStatement();
+      stmt.execute(`DELETE FROM ${table};`)
+      .then(res => {
+        assert.equal(res, true);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    });
+
+    it('should return false when insert() is failed', function() {
+      for(var i = 0; i < 1000; i++) {
+        let stmt = connection.createStatement();
+        let passwd = `admin_passwd${i}`;
+        stmt.execute(`INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`)
+        .then(res => {
+          assert.equal(res, true);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      }
+    });
+    
+    it('should return false when select count(*) is failed', function() {
+      let stmt = connection.createStatement();
+      
+      stmt.executeQuery(`SELECT COUNT(*) FROM ${table};`)
+      .then(res => {
+        res.next();
+        assert.equal(res.data[0], 1000);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    });
+    
+
   });
 });
