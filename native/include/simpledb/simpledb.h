@@ -42,7 +42,7 @@ public:
   bool Execute(const std::string& sql);
   bool ExecuteUpdate(const std::string &sql);
   std::unique_ptr<ResultSet> ExecuteQuery(const std::string& sql);
-  Statement *Clone();
+  Statement *Unref();
 
 protected:
   int Prepare(const std::string &sql);
@@ -71,7 +71,7 @@ public:
   bool Execute(void);
   bool ExecuteUpdate(void);
   std::unique_ptr<ResultSet> ExecuteQuery(void);
-  PreparedStatement *Clone();
+  PreparedStatement *Unref();
 };
 
 class ResultSet {
@@ -83,7 +83,7 @@ public:
   double GetDouble(int index);
   Buffer GetBlob(int index);
   const char* GetString(int index);
-  ResultSet *Clone();
+  ResultSet *Unref();
 
 private:
   std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt_{};

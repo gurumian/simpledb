@@ -73,7 +73,7 @@ std::unique_ptr<ResultSet>  PreparedStatement::ExecuteQuery(void){
   return result;
 }
 
-PreparedStatement *PreparedStatement::Clone() {
+PreparedStatement *PreparedStatement::Unref() {
   return new PreparedStatement(conn_, std::move(stmt_));
 }
 

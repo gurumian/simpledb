@@ -66,7 +66,7 @@ int Statement::Prepare(const std::string &sql) {
   return err;
 }
 
-Statement *Statement::Clone() {
+Statement *Statement::Unref() {
   return new Statement(conn_, std::move(stmt_));
 }
 

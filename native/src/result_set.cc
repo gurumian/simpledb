@@ -44,7 +44,7 @@ Buffer ResultSet::GetBlob(int index) {
   return std::move(buf);
 }
 
-ResultSet *ResultSet::Clone() {
+ResultSet *ResultSet::Unref() {
   return new ResultSet(std::move(stmt_));
 }
 
