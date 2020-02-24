@@ -25,6 +25,8 @@ private:
   void SetBlob(const Napi::CallbackInfo& info);
   Napi::Value ExecuteUpdate(const Napi::CallbackInfo& info);
 
+  int index(const Napi::Object& obj);
+
 private:
   std::unique_ptr<util::db::PreparedStatement> stat_{};
 };
