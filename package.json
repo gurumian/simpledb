@@ -1,7 +1,7 @@
 {
-  "name": "@buttonfly/simpledb",
+  "name": "simpledbc",
   "version": "0.1.0",
-  "description": "Node.js sqlite3 wrapper",
+  "description": "Node.js sqlite3 client",
   "main": "node/index.js",
   "files": [
     "index.js",
