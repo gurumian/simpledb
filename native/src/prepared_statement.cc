@@ -16,36 +16,36 @@ PreparedStatement::PreparedStatement(const sqlite3* conn, std::unique_ptr<sqlite
 : Statement(conn, std::move(stmt)) {
 }
 
-void PreparedStatement::SetString(int index, const std::string &value) {
-  int err = sqlite3_bind_text(stmt_.get(), index, value.c_str(), value.length(), SQLITE_TRANSIENT);
+void PreparedStatement::SetString(int i, const std::string &value) {
+  int err = sqlite3_bind_text(stmt_.get(), i, value.c_str(), value.length(), SQLITE_TRANSIENT);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
 }
 
-void PreparedStatement::SetInt(int index, int value) {
-  int err = sqlite3_bind_int(stmt_.get(), index, value);
+void PreparedStatement::SetInt(int i, int value) {
+  int err = sqlite3_bind_int(stmt_.get(), i, value);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
 }
 
-void PreparedStatement::SetInt(int index, int64_t value) {
-  int err = sqlite3_bind_int64(stmt_.get(), index, value);
+void PreparedStatement::SetInt(int i, int64_t value) {
+  int err = sqlite3_bind_int64(stmt_.get(), i, value);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
 }
 
-void PreparedStatement::SetDouble(int index, double value) {
-  int err = sqlite3_bind_double(stmt_.get(), index, value);
+void PreparedStatement::SetDouble(int i, double value) {
+  int err = sqlite3_bind_double(stmt_.get(), i, value);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
 }
 
-void PreparedStatement::SetBlob(int index, void *value, size_t length) {
-  int err = sqlite3_bind_blob(stmt_.get(), index, value, length, SQLITE_TRANSIENT);
+void PreparedStatement::SetBlob(int i, void *value, size_t length) {
+  int err = sqlite3_bind_blob(stmt_.get(), i, value, length, SQLITE_TRANSIENT);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
