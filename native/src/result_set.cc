@@ -48,6 +48,10 @@ int ResultSet::columnType(int i) {
   return sqlite3_column_type(stmt_.get(), i);
 }
 
+const char *ResultSet::columnName(int i) {
+  return sqlite3_column_name(stmt_.get(), i);
+}
+
 ResultSet *ResultSet::Unref() {
   return new ResultSet(std::move(stmt_));
 }

@@ -51,7 +51,8 @@ let stmt = connection.createStatement();
 stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 .then(res => {
   while(res.next()) {
-    console.log(res.data);
+    console.log(res.data); // e.g. [ 93, '4fsdfgas3fdf' ]
+    // console.log(res.obj); // e.g. { idx: 93, passwd: '4fsdfgas3fdf' }
   }
 })
 ```
@@ -62,7 +63,7 @@ let stmt = connection.createStatement();
 let password = 'new password';
 let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
 stmt.execute(query)
-.then(res =>{
+.then(res => {
   console.log(res);
 })
 ```

@@ -19,6 +19,7 @@ Napi::Object ResultSet::Init(Napi::Env env, Napi::Object exports) {
                     InstanceMethod("getDouble", &ResultSet::GetDouble),
                     InstanceMethod("getBlob", &ResultSet::GetBlob),
                     InstanceAccessor("data", &ResultSet::Get, nullptr),
+                    InstanceAccessor("obj", &ResultSet::GetAsObject, nullptr),
                   });
 
   constructor = Napi::Persistent(func);
@@ -146,6 +147,37 @@ Napi::Value ResultSet::Get(const Napi::CallbackInfo& info) {
     }
     else if(type == SQLITE_NULL) {
       data[i] = env.Null();
+    }
+    else {
+      LOG(WARNING) << __func__ << " unhandled: " << type;
+    }
+  }
+
+  return data;
+}
+
+Napi::Value ResultSet::GetAsObject(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  int count = res_->GetColumeCount();
+  auto data = Napi::Object::New(env);
+
+  for(int i = 0; i < count; i++) {
+    int type = res_->columnType(i);
+    if(type == SQLITE_INTEGER) {
+      data[res_->columnName(i)] = Napi::Number::New(env, res_->GetInt(i));
+    }
+    else if(type == SQLITE_FLOAT) {
+      data[res_->columnName(i)] = Napi::Number::New(env, res_->GetDouble(i));
+    }
+    else if(type == SQLITE_TEXT) {
+      data[res_->columnName(i)] = Napi::String::New(env, res_->GetString(i));
+    }
+    else if(type == SQLITE_BLOB) {
+      data[res_->columnName(i)] = blob(env, i);
+    }
+    else if(type == SQLITE_NULL) {
+      data[res_->columnName(i)] = env.Null();
     }
     else {
       LOG(WARNING) << __func__ << " unhandled: " << type;

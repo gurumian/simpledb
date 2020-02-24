@@ -63,6 +63,20 @@ function select() {
   });
 }
 
+function select2() {
+  let stmt = connection.createStatement();
+  let query =`SELECT idx, passwd, date FROM ${table}`;
+  stmt.executeQuery(query)
+  .then(res => {
+    while(res.next()) {
+      console.log(res.obj);
+    }
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+
 // UPDATE
 function update() {
   let stmt = connection.createStatement();
@@ -98,3 +112,4 @@ insert();
 select();
 update();
 remove();
+select2();
