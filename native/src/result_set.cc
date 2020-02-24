@@ -1,5 +1,7 @@
 #include "simpledb.h"
 #include <string.h>
+#include <algorithm>
+#include "log_message.h"
 
 namespace util {
 namespace db {
@@ -31,20 +33,14 @@ double ResultSet::GetDouble(int index) {
   return sqlite3_column_double(stmt_.get(), index);
 }
 
-Buffer ResultSet::GetBlob(int index) {
+Blob ResultSet::GetBlob(int index) {
   int n = sqlite3_column_bytes(stmt_.get(), index);
-
-  Buffer buf{
-      (uint8_t *) malloc(n),
-      [](uint8_t *ptr) { if(ptr) { free(ptr);}}
-  };
-  memset(buf.get(), 0, n);
-  memcpy(buf.get(), sqlite3_column_blob(stmt_.get(), index), n);
-
-  return std::move(buf);
+  const uint8_t *start = (uint8_t *)sqlite3_column_blob(stmt_.get(), index);
+  Blob blob{new std::vector<uint8_t>(start, start + n)};
+  return blob;
 }
 
-ResultSet *ResultSet::Clone() {
+ResultSet *ResultSet::Unref() {
   return new ResultSet(std::move(stmt_));
 }
 

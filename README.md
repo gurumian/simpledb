@@ -29,9 +29,6 @@ stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passw
 .then(res => {
   console.log(`create: {res}`);
 })
-.catch(err => {
-  console.log(err);
-});
 ```
 
 ### INSERT
@@ -47,9 +44,6 @@ stmt.execute()
 .then(res => {
   console.log(`insert: {res}`);
 })
-.catch(err => {
-  console.log(err);
-});
 ```
 
 ### SELECT
@@ -62,9 +56,6 @@ stmt.executeQuery('SELECT idx, passwd, date FROM admin')
     console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
   }
 })
-.catch(err => {
-  console.log(err);
-});
 ```
 
 ### UPDATE
@@ -79,9 +70,6 @@ stmt.execute()
 .then(res =>{
   console.log(`update: {res}`);
 })
-.catch(err => {
-  console.log(err);
-});
 ```
 
 ### DELETE
@@ -97,9 +85,6 @@ stmt.execute()
 .then(res => {
   console.log(`delete: ${res}`);
 })
-.catch(err => {
-  console.log(err);
-});
 ```
 
 

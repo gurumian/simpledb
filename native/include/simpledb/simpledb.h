@@ -8,11 +8,12 @@
 #include <memory>
 #include <map>
 #include <functional>
+#include <vector>
 
 namespace util {
 namespace db {
 
-using Buffer=std::unique_ptr<uint8_t, std::function<void(uint8_t *)>>;
+using Blob=std::unique_ptr<std::vector<uint8_t>>;
 
 class ResultSet;
 class Statement;
@@ -42,7 +43,7 @@ public:
   bool Execute(const std::string& sql);
   bool ExecuteUpdate(const std::string &sql);
   std::unique_ptr<ResultSet> ExecuteQuery(const std::string& sql);
-  Statement *Clone();
+  Statement *Unref();
 
 protected:
   int Prepare(const std::string &sql);
@@ -71,7 +72,7 @@ public:
   bool Execute(void);
   bool ExecuteUpdate(void);
   std::unique_ptr<ResultSet> ExecuteQuery(void);
-  PreparedStatement *Clone();
+  PreparedStatement *Unref();
 };
 
 class ResultSet {
@@ -81,9 +82,9 @@ public:
   int GetInt(int index);
   int64_t GetInt64(int index);
   double GetDouble(int index);
-  Buffer GetBlob(int index);
+  Blob GetBlob(int index);
   const char* GetString(int index);
-  ResultSet *Clone();
+  ResultSet *Unref();
 
 private:
   std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> stmt_{};

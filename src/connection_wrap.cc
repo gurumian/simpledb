@@ -41,7 +41,7 @@ Connection::Connection(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Connec
 Napi::Value Connection::CreateStatement(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
-  auto stat = connection_->CreateStatement()->Clone();
+  auto stat = connection_->CreateStatement()->Unref();
   assert(stat);
   return Statement::NewInstance(env, Napi::External<util::db::Statement>::New(env, stat));
 }
@@ -55,7 +55,7 @@ Napi::Value Connection::PrepareStatement(const Napi::CallbackInfo& info) {
 
   auto query = info[0].ToString().Utf8Value();
 
-  auto stat = connection_->PrepareStatement(query)->Clone();
+  auto stat = connection_->PrepareStatement(query)->Unref();
   assert(stat);
   return PreparedStatement::NewInstance(env, Napi::External<util::db::PreparedStatement>::New(env, stat));
 }

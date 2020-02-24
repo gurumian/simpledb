@@ -45,7 +45,7 @@ void PreparedStatement::SetDouble(int index, double value) {
 }
 
 void PreparedStatement::SetBlob(int index, void *value, size_t length) {
-  int err = sqlite3_bind_blob(stmt_.get(), index, value, length, SQLITE_STATIC);
+  int err = sqlite3_bind_blob(stmt_.get(), index, value, length, SQLITE_TRANSIENT);
   if(err) {
     LOG(FATAL) << " error(" << err << ")";
   }
@@ -73,7 +73,7 @@ std::unique_ptr<ResultSet>  PreparedStatement::ExecuteQuery(void){
   return result;
 }
 
-PreparedStatement *PreparedStatement::Clone() {
+PreparedStatement *PreparedStatement::Unref() {
   return new PreparedStatement(conn_, std::move(stmt_));
 }
 

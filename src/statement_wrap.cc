@@ -80,7 +80,7 @@ Napi::Value Statement::ExecuteQuery(const Napi::CallbackInfo& info) {
 
   auto deferred = Napi::Promise::Deferred::New(env);
   assert(stat_);
-  auto res = stat_->ExecuteQuery(query)->Clone();
+  auto res = stat_->ExecuteQuery(query)->Unref();
   if(res) {
     deferred.Resolve(ResultSet::NewInstance(env, Napi::External<util::db::ResultSet>::New(env, res)));
   }
