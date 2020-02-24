@@ -40,6 +40,14 @@ Blob ResultSet::GetBlob(int index) {
   return blob;
 }
 
+int ResultSet::GetColumeCount() {
+  return sqlite3_column_count(stmt_.get());
+}
+
+int ResultSet::columnType(int index) {
+  return sqlite3_column_type(stmt_.get(), index);
+}
+
 ResultSet *ResultSet::Unref() {
   return new ResultSet(std::move(stmt_));
 }

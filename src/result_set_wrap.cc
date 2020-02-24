@@ -18,6 +18,7 @@ Napi::Object ResultSet::Init(Napi::Env env, Napi::Object exports) {
                     InstanceMethod("getString", &ResultSet::GetString),
                     InstanceMethod("getDouble", &ResultSet::GetDouble),
                     InstanceMethod("getBlob", &ResultSet::GetBlob),
+                    InstanceAccessor("data", &ResultSet::Get, nullptr),
                   });
 
   constructor = Napi::Persistent(func);
@@ -117,4 +118,42 @@ Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
   return Napi::ArrayBuffer::New(env, data, (size_t) blob->size(), [](Napi::Env env, void *externalData){
     delete (uint8_t *)externalData;
   });
+}
+
+Napi::Value ResultSet::Get(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  int count = res_->GetColumeCount();
+  auto data = Napi::Array::New(env, count);
+
+  for(int i = 0; i < count; i++) {
+    int type = res_->columnType(i);
+    if(type == SQLITE_INTEGER) {
+      data[i] = Napi::Number::New(env, res_->GetInt(i));
+    }
+    else if(type == SQLITE_FLOAT) {
+      data[i] = Napi::Number::New(env, res_->GetDouble(i));
+    }
+    else if(type == SQLITE_TEXT) {
+      data[i] = Napi::String::New(env, res_->GetString(i));
+    }
+    else if(type == SQLITE_BLOB) {
+      auto blob = res_->GetBlob(i);
+      uint8_t *buf = new uint8_t[blob->size()];
+      std::copy(blob->begin(), blob->end(), buf);
+      assert(blob);
+
+      data[i] = Napi::ArrayBuffer::New(env, buf, (size_t) blob->size(), [](Napi::Env env, void *externalData){
+        delete (uint8_t *)externalData;
+      });
+    }
+    else if(type == SQLITE_NULL) {
+      data[i] = env.Null();
+    }
+    else {
+      LOG(WARNING) << __func__ << " unhandled: " << type;
+    }
+  }
+
+  return data;
 }

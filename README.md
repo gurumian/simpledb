@@ -51,7 +51,7 @@ let stmt = connection.createStatement();
 stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 .then(res => {
   while(res.next()) {
-    console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
+    console.log(res.data);
   }
 })
 ```

@@ -30,6 +30,49 @@ describe('All', function() {
       });
     });
 
+    it('should return false when create() is failed', function() {
+      let stmt = connection.createStatement();
+      stmt.executeQuery(`PRAGMA table_info(${table});`)
+      .then(res => {
+        assert.equal(res.next(), true);
+        let data = res.data;
+        assert.equal(data[0], 0);
+        assert.equal(data[1], 'idx');
+        assert.equal(data[2], 'INTEGER');
+        assert.equal(data[3], 0);
+        
+        assert.equal(res.next(), true);
+        data = res.data;
+        assert.equal(data[0], 1);
+        assert.equal(data[1], 'passwd');
+        assert.equal(data[2], 'TEXT');
+        assert.equal(data[3], 0);
+        
+        assert.equal(res.next(), true);
+        data = res.data;
+        assert.equal(data[0], 2);
+        assert.equal(data[1], 'dump');
+        assert.equal(data[2], 'BLOB');
+        assert.equal(data[3], 0);
+
+        assert.equal(res.next(), true);
+        data = res.data;
+        assert.equal(data[0], 3);
+        assert.equal(data[1], 'date');
+        assert.equal(data[2], 'DATETIME');
+        assert.equal(data[3], 0);
+
+        // [ 0, 'idx', 'INTEGER', 0, null, 1 ]
+        // [ 1, 'passwd', 'TEXT', 0, null, 0 ]
+        // [ 2, 'dump', 'BLOB', 0, null, 0 ]
+        // [ 3, 'date', 'DATETIME', 0, null, 0 ]
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    });
+
+    // PRAGMA table_info(admin)
     it('should return false when insert() is failed', function() {
       let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, dump, date) VALUES(?,?,datetime(\'now\',\'localtime\'));`);
       stmt.setString({
@@ -65,15 +108,18 @@ describe('All', function() {
       stmt.executeQuery(`SELECT idx, passwd, dump, date FROM ${table}`)
       .then(res => {
         assert.equal(res.next(), true);
-        assert.equal(res.getInt(0), 1);
-        assert.equal(res.getString(1), 'admin_passwd');
-        let data = res.getBlob(2);
-        // console.log(data);
-        // assert.equal(res.getBlob(2), [3,4,5,6,7]);
-        // {
-        //
-        // console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
-        // }
+        let data = res.data;
+        assert.equal(data[0], 1);
+        assert.equal(data[1], 'admin_passwd');
+        // [
+        //   1,
+        //   'admin_passwd',
+        //   ArrayBuffer {
+        //     [Uint8Contents]: <7b 00 0a 00 20 00 20 00 22 00 68 00 65 00 6c 00 6c 00 6f 00 22 00 3a 00 20 00 22 00 77 00 6f 00 72 00 6c 00 64 00 22 00 0a 00 7d 00>,
+        //     byteLength: 44
+        //   },
+        //   '2020-02-24 18:16:41'
+        // ]
       })
       .catch(err => {
         console.log(err);
@@ -100,11 +146,9 @@ describe('All', function() {
       stmt.executeQuery('SELECT idx, passwd, date FROM admin')
       .then(res => {
         assert.equal(res.next(), true);
-        assert.equal(res.getInt(0), 1);
-        assert.equal(res.getString(1), 'new_passcode');
-        // {
-        //   console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
-        // }
+        let data = res.data;
+        assert.equal(data[0], 1);
+        assert.equal(data[1], 'new_passcode');
       })
       .catch(err => {
         console.log(err);

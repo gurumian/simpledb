@@ -84,6 +84,8 @@ public:
   double GetDouble(int index);
   Blob GetBlob(int index);
   const char* GetString(int index);
+  int GetColumeCount();
+  int columnType(int index);
   ResultSet *Unref();
 
 private:
