@@ -1,6 +1,6 @@
 {
   "name": "@buttonfly/simpledb",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Node.js sqlite3 wrapper",
   "main": "node/index.js",
   "files": [

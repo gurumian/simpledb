@@ -7,13 +7,13 @@ apt install libsqlite3-dev
 
 You may need to install `cmake-js` as well
 ```
-npm i @buttonfly/simpledb
+npm install -g cmake-js
 ```
 
 
 ## Install
 ```bash
-npm i simpledb
+npm i @buttonfly/simpledb
 ```
 
 ## Example
