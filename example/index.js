@@ -65,12 +65,10 @@ function select() {
 
 // UPDATE
 function update() {
-  let stmt = connection.prepareStatement(`UPDATE ${table} set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;`);
-  stmt.setString({
-    index: 1,
-    value: 'new_passcode',
-  });
-  stmt.execute()
+  let stmt = connection.createStatement();
+  let password = 'new password';
+  let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
+  stmt.execute(query)
   .then(res =>{
     console.log(res);
   })
