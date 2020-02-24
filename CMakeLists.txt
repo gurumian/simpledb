@@ -9,7 +9,7 @@ if (POLICY CMP0063)
   cmake_policy (SET CMP0063 NEW)
 endif (POLICY CMP0063)
 
-project (simpledb)
+project (simpledbc)
 
 FIND_PACKAGE (Threads)
 set(LIBS ${LIBS} ${CMAKE_THREAD_LIBS_INIT})
@@ -71,6 +71,6 @@ include_directories(${simpledb_base_dir}/native/include/simpledb)
 include_directories(${simpledb_base_dir}/native/src)
 
 include_directories(${CMAKE_JS_INC})
-add_library(simpledb SHARED ${simpledb_source_files} ${CMAKE_JS_SRC})
-set_target_properties(simpledb PROPERTIES PREFIX "" SUFFIX ".node")
-target_link_libraries(simpledb ${CMAKE_JS_LIB} simpledb_native ${LIBS})
+add_library(simpledbc SHARED ${simpledb_source_files} ${CMAKE_JS_SRC})
+set_target_properties(simpledbc PROPERTIES PREFIX "" SUFFIX ".node")
+target_link_libraries(simpledbc ${CMAKE_JS_LIB} simpledb_native ${LIBS})

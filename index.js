@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('bindings')('simpledb');
+module.exports = require('bindings')('simpledbc');
