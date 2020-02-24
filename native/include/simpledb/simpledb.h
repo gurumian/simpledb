@@ -86,6 +86,7 @@ public:
   const char* GetString(int index);
   int GetColumeCount();
   int columnType(int index);
+  const char *columnName(int index);
   ResultSet *Unref();
 
 private:

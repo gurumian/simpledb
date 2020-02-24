@@ -24,6 +24,7 @@ private:
   Napi::Value GetDouble(const Napi::CallbackInfo& info);
   Napi::Value GetBlob(const Napi::CallbackInfo& info);
   Napi::Value Get(const Napi::CallbackInfo& info);
+  Napi::Value GetAsObject(const Napi::CallbackInfo& info);
 
   Napi::ArrayBuffer blob(Napi::Env env, int index);
 
