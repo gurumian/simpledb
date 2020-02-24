@@ -23,8 +23,7 @@ let connection = new Connection(db);
 // CREATE
 function create() {
   let stmt = connection.createStatement();
-  let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`;
-  stmt.execute(query)
+  stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
   .then(res => {
     console.log(res);
   })
@@ -36,9 +35,13 @@ function create() {
 // INSERT 100
 function insert() {
   for(var i = 0; i < 99; i++) {
-    let stmt = connection.createStatement();
-    let query =  `INSERT INTO ${table} (passwd, date) VALUES(${Math.random()},datetime(\'now\',\'localtime\'));`;
-    stmt.execute(query)
+    let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
+    stmt.setString({
+      index: 1,
+      value: `admin_passwd${i}`,
+    });
+  
+    stmt.execute()
     .then(res => {
       console.log(res);
     })
@@ -51,8 +54,7 @@ function insert() {
 // SELECT
 function select() {
   let stmt = connection.createStatement();
-  let query =`SELECT idx, passwd, date FROM ${table}`;
-  stmt.executeQuery(query)
+  stmt.executeQuery('SELECT idx, passwd, date FROM admin')
   .then(res => {
     while(res.next()) {
       console.log(`${res.getInt(0)}, ${res.getString(1)}, ${res.getString(2)}`);
@@ -65,10 +67,12 @@ function select() {
 
 // UPDATE
 function update() {
-  let stmt = connection.createStatement();
-  let password = 'new password';
-  let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
-  stmt.execute(query)
+  let stmt = connection.prepareStatement(`UPDATE ${table} set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;`);
+  stmt.setString({
+    index: 1,
+    value: 'new_passcode',
+  });
+  stmt.execute()
   .then(res =>{
     console.log(res);
   })
@@ -77,13 +81,15 @@ function update() {
   });
 }
 
-
 // DELETE id=1
 function remove() {
+  let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
   let id = 1;
-  let stmt = connection.createStatement();
-  let query = `DELETE FROM admin WHERE idx=${id};`;
-  stmt.execute(query)
+  stmt.setInt({
+    index: 1,
+    value: id,
+  });
+  stmt.execute()
   .then(res => {
     console.log(res);
   })
@@ -98,3 +104,4 @@ insert();
 select();
 update();
 remove();
+

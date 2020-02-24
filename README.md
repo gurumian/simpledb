@@ -27,22 +27,18 @@ let connection = new Connection(db);
 let stmt = connection.createStatement();
 stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
 .then(res => {
-  console.log(`create: {res}`);
+  console.log(res);
 })
 ```
 
 ### INSERT
 ```js
 let connection = new Connection(db);
-let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
-stmt.setString({
-  index: 1,
-  value: `admin_passwd${i}`,
-});
-
-stmt.execute()
+let stmt = connection.createStatement();
+let query =  `INSERT INTO ${table} (passwd, date) VALUES(${Math.random()},datetime(\'now\',\'localtime\'));`;
+stmt.execute(query)
 .then(res => {
-  console.log(`insert: {res}`);
+  console.log(res);
 })
 ```
 
@@ -60,30 +56,22 @@ stmt.executeQuery('SELECT idx, passwd, date FROM admin')
 
 ### UPDATE
 ```js
-let connection = new Connection(db);
-let stmt = connection.prepareStatement(`UPDATE ${table} set passwd=?, date=datetime(\'now\',\'localtime\') WHERE idx=1;`);
-stmt.setString({
-  index: 1,
-  value: 'new_passcode',
-});
-stmt.execute()
+let stmt = connection.createStatement();
+let password = 'new password';
+let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
+stmt.execute(query)
 .then(res =>{
-  console.log(`update: {res}`);
+  console.log(res);
 })
 ```
 
 ### DELETE
 ```js
-let connection = new Connection(db);
-let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
+let stmt = connection.createStatement();
 let id = 1;
-stmt.setInt({
-  index: 1,
-  value: id,
-});
-stmt.execute()
+stmt.execute(`DELETE FROM admin WHERE idx=${id};`)
 .then(res => {
-  console.log(`delete: ${res}`);
+  console.log(res);
 })
 ```
 
