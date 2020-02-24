@@ -217,10 +217,12 @@ void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
   }
 
   if(!static_cast<Napi::Value>(obj["value"]).IsArrayBuffer()) {
-    Napi::TypeError::New(env, "ArrayBuufer expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "ArrayBuffer expected").ThrowAsJavaScriptException();
     return;
   }
-  // void SetBlob(int index, void *value, size_t length);
+
+  Napi::ArrayBuffer value = static_cast<Napi::Value>(obj["value"]).As<Napi::ArrayBuffer>();
+  stat_->SetBlob(index, value.Data(), value.ByteLength());
 }
 
 Napi::Value PreparedStatement::ExecuteUpdate(const Napi::CallbackInfo& info) {

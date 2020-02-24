@@ -8,11 +8,12 @@
 #include <memory>
 #include <map>
 #include <functional>
+#include <vector>
 
 namespace util {
 namespace db {
 
-using Buffer=std::unique_ptr<uint8_t, std::function<void(uint8_t *)>>;
+using Blob=std::unique_ptr<std::vector<uint8_t>>;
 
 class ResultSet;
 class Statement;
@@ -81,7 +82,7 @@ public:
   int GetInt(int index);
   int64_t GetInt64(int index);
   double GetDouble(int index);
-  Buffer GetBlob(int index);
+  Blob GetBlob(int index);
   const char* GetString(int index);
   ResultSet *Unref();
 

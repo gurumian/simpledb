@@ -110,7 +110,6 @@ Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
 
   auto index = (int)info[0].ToNumber();
   auto blob = res_->GetBlob(index);
-
-  // Napi::ArrayBuffer::New(env, (frame_->data[ch] + data_size_per_sample*i), data_size_per_sample);
-  return Napi::Number::New(info.Env(), 0);
+  assert(blob);
+  return Napi::ArrayBuffer::New(env, (void *)blob->data(), (size_t) blob->size());
 }
