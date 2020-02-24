@@ -34,15 +34,11 @@ stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passw
 ### INSERT
 ```js
 let connection = new Connection(db);
-let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
-stmt.setString({
-  index: 1,
-  value: `admin_passwd${i}`,
-});
-
-stmt.execute()
+let stmt = connection.createStatement();
+let query =  `INSERT INTO ${table} (passwd, date) VALUES(${Math.random()},datetime(\'now\',\'localtime\'));`;
+stmt.execute(query)
 .then(res => {
-  console.log(`insert: {res}`);
+  console.log(res);
 })
 ```
 
@@ -74,16 +70,11 @@ stmt.execute()
 
 ### DELETE
 ```js
-let connection = new Connection(db);
-let stmt = connection.prepareStatement('DELETE FROM admin WHERE idx=?;');
+let stmt = connection.createStatement();
 let id = 1;
-stmt.setInt({
-  index: 1,
-  value: id,
-});
-stmt.execute()
+stmt.execute(`DELETE FROM admin WHERE idx=${id};`)
 .then(res => {
-  console.log(`delete: ${res}`);
+  assert.equal(res, true);
 })
 ```
 
