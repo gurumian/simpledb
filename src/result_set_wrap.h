@@ -25,6 +25,8 @@ private:
   Napi::Value GetBlob(const Napi::CallbackInfo& info);
   Napi::Value Get(const Napi::CallbackInfo& info);
 
+  Napi::ArrayBuffer blob(Napi::Env env, int index);
+
 private:
   std::unique_ptr<util::db::ResultSet> res_{};
 };

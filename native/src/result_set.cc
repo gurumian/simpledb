@@ -17,25 +17,25 @@ bool ResultSet::Next(void) {
   return false;
 }
 
-int ResultSet::GetInt(int index){
-  return sqlite3_column_int(stmt_.get(), index);
+int ResultSet::GetInt(int i){
+  return sqlite3_column_int(stmt_.get(), i);
 }
 
-const char* ResultSet::GetString(int index){
-  return (const char*)sqlite3_column_text(stmt_.get(), index);
+const char* ResultSet::GetString(int i){
+  return (const char*)sqlite3_column_text(stmt_.get(), i);
 }
 
-int64_t ResultSet::GetInt64(int index) {
-  return sqlite3_column_int64(stmt_.get(), index);
+int64_t ResultSet::GetInt64(int i) {
+  return sqlite3_column_int64(stmt_.get(), i);
 }
 
-double ResultSet::GetDouble(int index) {
-  return sqlite3_column_double(stmt_.get(), index);
+double ResultSet::GetDouble(int i) {
+  return sqlite3_column_double(stmt_.get(), i);
 }
 
-Blob ResultSet::GetBlob(int index) {
-  int n = sqlite3_column_bytes(stmt_.get(), index);
-  const uint8_t *start = (uint8_t *)sqlite3_column_blob(stmt_.get(), index);
+Blob ResultSet::GetBlob(int i) {
+  int n = sqlite3_column_bytes(stmt_.get(), i);
+  const uint8_t *start = (uint8_t *)sqlite3_column_blob(stmt_.get(), i);
   Blob blob{new std::vector<uint8_t>(start, start + n)};
   return blob;
 }
@@ -44,8 +44,8 @@ int ResultSet::GetColumeCount() {
   return sqlite3_column_count(stmt_.get());
 }
 
-int ResultSet::columnType(int index) {
-  return sqlite3_column_type(stmt_.get(), index);
+int ResultSet::columnType(int i) {
+  return sqlite3_column_type(stmt_.get(), i);
 }
 
 ResultSet *ResultSet::Unref() {

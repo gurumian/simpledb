@@ -63,6 +63,17 @@ Napi::Value PreparedStatement::Execute(const Napi::CallbackInfo& info) {
   return deferred.Promise();
 }
 
+int PreparedStatement::index(const Napi::Object& obj){
+  if(!obj.HasOwnProperty("index")) {
+    return -1;
+  }
+
+  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+    return -1;
+  }
+
+  return (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
+}
 
 void PreparedStatement::SetString(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
@@ -72,16 +83,11 @@ void PreparedStatement::SetString(const Napi::CallbackInfo& info) {
   }
 
   Napi::Object obj = info[0].ToObject();
-  if(!obj.HasOwnProperty("index")) {
-    Napi::TypeError::New(env, "no index").ThrowAsJavaScriptException();
-    return;
-  }
-
-  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+  int i = index(obj);
+  if(i < 0) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
-  int index = (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
 
   if(!obj.HasOwnProperty("value")) {
     Napi::TypeError::New(env, "no value").ThrowAsJavaScriptException();
@@ -92,8 +98,9 @@ void PreparedStatement::SetString(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
     return;
   }
+
   Napi::String value = static_cast<Napi::Value>(obj["value"]).ToString();
-  stat_->SetString(index, value.Utf8Value());
+  stat_->SetString(i, value.Utf8Value());
 }
 
 void PreparedStatement::SetInt(const Napi::CallbackInfo& info) {
@@ -104,16 +111,11 @@ void PreparedStatement::SetInt(const Napi::CallbackInfo& info) {
   }
 
   Napi::Object obj = info[0].ToObject();
-  if(!obj.HasOwnProperty("index")) {
-    Napi::TypeError::New(env, "no index").ThrowAsJavaScriptException();
-    return;
-  }
-
-  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+  int i = index(obj);
+  if(i < 0) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
-  int index = (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
 
   if(!obj.HasOwnProperty("value")) {
     Napi::TypeError::New(env, "no value").ThrowAsJavaScriptException();
@@ -125,7 +127,7 @@ void PreparedStatement::SetInt(const Napi::CallbackInfo& info) {
     return;
   }
   int value = (int) static_cast<Napi::Value>(obj["value"]).ToNumber();
-  stat_->SetInt(index, value);
+  stat_->SetInt(i, value);
 }
 
 void PreparedStatement::SetInt64(const Napi::CallbackInfo& info) {
@@ -136,16 +138,11 @@ void PreparedStatement::SetInt64(const Napi::CallbackInfo& info) {
   }
 
   Napi::Object obj = info[0].ToObject();
-  if(!obj.HasOwnProperty("index")) {
-    Napi::TypeError::New(env, "no index").ThrowAsJavaScriptException();
-    return;
-  }
-
-  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+  int i = index(obj);
+  if(i < 0) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
-  int index = (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
 
   if(!obj.HasOwnProperty("value")) {
     Napi::TypeError::New(env, "no value").ThrowAsJavaScriptException();
@@ -157,7 +154,7 @@ void PreparedStatement::SetInt64(const Napi::CallbackInfo& info) {
     return;
   }
   int64_t value = (int64_t) static_cast<Napi::Value>(obj["value"]).ToNumber();
-  stat_->SetInt(index, value);
+  stat_->SetInt(i, value);
 }
 
 void PreparedStatement::SetDouble(const Napi::CallbackInfo& info) {
@@ -168,16 +165,11 @@ void PreparedStatement::SetDouble(const Napi::CallbackInfo& info) {
   }
 
   Napi::Object obj = info[0].ToObject();
-  if(!obj.HasOwnProperty("index")) {
-    Napi::TypeError::New(env, "no index").ThrowAsJavaScriptException();
-    return;
-  }
-
-  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+  int i = index(obj);
+  if(i < 0) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
-  int index = (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
 
   if(!obj.HasOwnProperty("value")) {
     Napi::TypeError::New(env, "no value").ThrowAsJavaScriptException();
@@ -189,7 +181,7 @@ void PreparedStatement::SetDouble(const Napi::CallbackInfo& info) {
     return;
   }
   double value = (double) static_cast<Napi::Value>(obj["value"]).ToNumber();
-  stat_->SetDouble(index, value);
+  stat_->SetDouble(i, value);
 }
 
 void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
@@ -200,16 +192,11 @@ void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
   }
 
   Napi::Object obj = info[0].ToObject();
-  if(!obj.HasOwnProperty("index")) {
-    Napi::TypeError::New(env, "no index").ThrowAsJavaScriptException();
-    return;
-  }
-
-  if(!static_cast<Napi::Value>(obj["index"]).IsNumber()) {
+  int i = index(obj);
+  if(i < 0) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
     return;
   }
-  int index = (int) static_cast<Napi::Value>(obj["index"]).ToNumber();
 
   if(!obj.HasOwnProperty("value")) {
     Napi::TypeError::New(env, "no value").ThrowAsJavaScriptException();
@@ -222,7 +209,7 @@ void PreparedStatement::SetBlob(const Napi::CallbackInfo& info) {
   }
 
   Napi::ArrayBuffer value = static_cast<Napi::Value>(obj["value"]).As<Napi::ArrayBuffer>();
-  stat_->SetBlob(index, value.Data(), value.ByteLength());
+  stat_->SetBlob(i, value.Data(), value.ByteLength());
 }
 
 Napi::Value PreparedStatement::ExecuteUpdate(const Napi::CallbackInfo& info) {
