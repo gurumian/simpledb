@@ -23,7 +23,7 @@ See `example/`
 
 ### CREATE
 ```js
-const {Connection} = require('simpledb');
+const {Connection} = require('simpledbc');
 
 let connection = new Connection(db);
 let stmt = connection.createStatement();
