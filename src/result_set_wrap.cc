@@ -110,6 +110,11 @@ Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
 
   auto index = (int)info[0].ToNumber();
   auto blob = res_->GetBlob(index);
+  uint8_t *data = new uint8_t[blob->size()];
+  std::copy(blob->begin(), blob->end(), data);
   assert(blob);
-  return Napi::ArrayBuffer::New(env, (void *)blob->data(), (size_t) blob->size());
+
+  return Napi::ArrayBuffer::New(env, data, (size_t) blob->size(), [](Napi::Env env, void *externalData){
+    delete (uint8_t *)externalData;
+  });
 }

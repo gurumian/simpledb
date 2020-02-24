@@ -45,7 +45,7 @@ describe('All', function() {
         bufView[i] = str.charCodeAt(i);
       }
 
-      console.log(arraybuffer);
+      // console.log(arraybuffer);
       stmt.setBlob({
         index: 2,
         value: arraybuffer,
@@ -68,7 +68,7 @@ describe('All', function() {
         assert.equal(res.getInt(0), 1);
         assert.equal(res.getString(1), 'admin_passwd');
         let data = res.getBlob(2);
-        console.log(data);
+        // console.log(data);
         // assert.equal(res.getBlob(2), [3,4,5,6,7]);
         // {
         //
