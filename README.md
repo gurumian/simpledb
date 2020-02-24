@@ -62,7 +62,7 @@ let stmt = connection.createStatement();
 let password = 'new password';
 let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
 stmt.execute(query)
-.then(res =>{
+.then(res => {
   console.log(res);
 })
 ```
