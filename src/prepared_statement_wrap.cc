@@ -92,6 +92,7 @@ void PreparedStatement::SetString(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
     return;
   }
+
   Napi::String value = static_cast<Napi::Value>(obj["value"]).ToString();
   stat_->SetString(index, value.Utf8Value());
 }

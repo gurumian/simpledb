@@ -102,14 +102,7 @@ Napi::Value ResultSet::GetDouble(const Napi::CallbackInfo& info) {
   return Napi::Number::New(info.Env(), res_->GetDouble(index));
 }
 
-Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  if (info.Length() <= 0 || !info[0].IsNumber()) {
-    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
-
-  auto index = (int)info[0].ToNumber();
+Napi::ArrayBuffer ResultSet::blob(Napi::Env env, int index) {
   auto blob = res_->GetBlob(index);
   uint8_t *data = new uint8_t[blob->size()];
   std::copy(blob->begin(), blob->end(), data);
@@ -118,6 +111,17 @@ Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
   return Napi::ArrayBuffer::New(env, data, (size_t) blob->size(), [](Napi::Env env, void *externalData){
     delete (uint8_t *)externalData;
   });
+}
+
+Napi::Value ResultSet::GetBlob(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() <= 0 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  auto index = (int)info[0].ToNumber();
+  return blob(env, index);
 }
 
 Napi::Value ResultSet::Get(const Napi::CallbackInfo& info) {
@@ -138,14 +142,7 @@ Napi::Value ResultSet::Get(const Napi::CallbackInfo& info) {
       data[i] = Napi::String::New(env, res_->GetString(i));
     }
     else if(type == SQLITE_BLOB) {
-      auto blob = res_->GetBlob(i);
-      uint8_t *buf = new uint8_t[blob->size()];
-      std::copy(blob->begin(), blob->end(), buf);
-      assert(blob);
-
-      data[i] = Napi::ArrayBuffer::New(env, buf, (size_t) blob->size(), [](Napi::Env env, void *externalData){
-        delete (uint8_t *)externalData;
-      });
+      data[i] = blob(env, i);
     }
     else if(type == SQLITE_NULL) {
       data[i] = env.Null();
