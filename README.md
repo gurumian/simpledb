@@ -9,7 +9,7 @@ apt install libsqlite3-dev
 
 You may need to install `cmake-js` as well
 ```
-npm install -g cmake-js
+npm i -g cmake-js
 ```
 
 
