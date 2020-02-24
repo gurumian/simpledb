@@ -15,7 +15,7 @@ npm install -g cmake-js
 
 ## Install
 ```bash
-npm i @buttonfly/simpledb
+npm i simpledbc
 ```
 
 ## Example
