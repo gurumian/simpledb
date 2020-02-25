@@ -8,9 +8,11 @@ Napi::FunctionReference PreparedStatement::constructor;
 Napi::Object PreparedStatement::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
+  constexpr auto name = "PreparedStatement";
+
   Napi::Function func =
       DefineClass(env,
-                  "PreparedStatement",
+                  name,
                   {
                     InstanceMethod("execute", &PreparedStatement::Execute),
                     InstanceMethod("setString", &PreparedStatement::SetString),
@@ -24,7 +26,7 @@ Napi::Object PreparedStatement::Init(Napi::Env env, Napi::Object exports) {
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("PreparedStatement", func);
+  exports.Set(name, func);
 
   return exports;
 }

@@ -8,9 +8,11 @@ Napi::FunctionReference ResultSet::constructor;
 Napi::Object ResultSet::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
+  constexpr auto name = "ResultSet";
+
   Napi::Function func =
       DefineClass(env,
-                  "ResultSet",
+                  name,
                   {
                     InstanceMethod("next", &ResultSet::Next),
                     InstanceMethod("getInt", &ResultSet::GetInt),
@@ -25,7 +27,7 @@ Napi::Object ResultSet::Init(Napi::Env env, Napi::Object exports) {
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("ResultSet", func);
+  exports.Set(name, func);
 
   return exports;
 }
