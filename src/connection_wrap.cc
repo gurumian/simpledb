@@ -57,7 +57,13 @@ Napi::Value Connection::PrepareStatement(const Napi::CallbackInfo& info) {
 
   auto query = info[0].ToString().Utf8Value();
 
-  auto stat = connection_->PrepareStatement(query)->Unref();
-  assert(stat);
-  return PreparedStatement::NewInstance(env, Napi::External<util::db::PreparedStatement>::New(env, stat));
+  try {
+    auto stat = connection_->PrepareStatement(query)->Unref();
+    return PreparedStatement::NewInstance(env, Napi::External<util::db::PreparedStatement>::New(env, stat));
+  }
+  catch(const std::runtime_error& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+  return env.Undefined();
 }

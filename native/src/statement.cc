@@ -50,12 +50,11 @@ std::unique_ptr<ResultSet> Statement::ExecuteQuery(const std::string &sql) {
 }
 
 int Statement::Prepare(const std::string &sql) {
-  char* error{};
   sqlite3_stmt *stmt{};
-  int err = sqlite3_prepare_v2((sqlite3*)conn_, sql.c_str(), sql.length(), &stmt, (const char**)&error);
+  assert(conn_);
+  int err = sqlite3_prepare_v2((sqlite3*)conn_, sql.c_str(), sql.length(), &stmt, NULL);
   if(err) {
-    LOG(ERROR) << " sqlite3_prepare: " << err << ", " << error;
-    if(error) sqlite3_free(error);
+    throw std::runtime_error(sqlite3_errmsg((sqlite3*)conn_));
   }
 
   stmt_ = std::unique_ptr<sqlite3_stmt, std::function<void(sqlite3_stmt *)>> {

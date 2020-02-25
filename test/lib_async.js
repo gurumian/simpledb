@@ -26,7 +26,7 @@ describe('Library (async)', function() {
       let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, dump BLOB, date DATETIME);`;
       stmt.execute({
         query: query,
-        async: async,
+        async: false, // do it synchrously.
       })
       .then(res => {
         assert.equal(res, true);
