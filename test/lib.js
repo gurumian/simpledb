@@ -10,7 +10,9 @@ const fs = require('fs')
 const db = './test/example.db'
 const table = 'admin'
 
-describe('All', function() {
+const async = true;
+
+describe('Library', function() {
 
   if (fs.existsSync(db)) {
     fs.unlinkSync(db);
@@ -21,7 +23,11 @@ describe('All', function() {
   describe('Connection', function() {
     it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
-      stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, dump BLOB, date DATETIME);`)
+      let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, dump BLOB, date DATETIME);`;
+      stmt.execute({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -32,7 +38,11 @@ describe('All', function() {
 
     it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
-      stmt.executeQuery(`PRAGMA table_info(${table});`)
+      let query = `PRAGMA table_info(${table});`;
+      stmt.executeQuery({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res.next(), true);
         let data = res.data;
@@ -93,7 +103,9 @@ describe('All', function() {
         value: arraybuffer,
       });
 
-      stmt.execute()
+      stmt.execute({
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -104,7 +116,11 @@ describe('All', function() {
 
     it('should return error when select() is failed', function() {
       let stmt = connection.createStatement();
-      stmt.executeQuery(`SELECT idx, passwd, dump, date FROM ${table}`)
+      let query = `SELECT idx, passwd, dump, date FROM ${table}`;
+      stmt.executeQuery({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res.next(), true);
         let data = res.data;
@@ -131,7 +147,9 @@ describe('All', function() {
         index: 1,
         value: 'new_passcode',
       });
-      stmt.execute()
+      stmt.execute({
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -142,7 +160,11 @@ describe('All', function() {
 
     it('should return error when select() is failed', function() {
       let stmt = connection.createStatement();
-      stmt.executeQuery('SELECT idx, passwd, date FROM admin')
+      let query = `SELECT idx, passwd, date FROM ${table}`;
+      stmt.executeQuery({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res.next(), true);
         let data = res.data;
@@ -161,7 +183,9 @@ describe('All', function() {
         index: 1,
         value: id,
       });
-      stmt.execute()
+      stmt.execute({
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -173,7 +197,11 @@ describe('All', function() {
     it('should return false when delete() is failed', function() {
       let stmt = connection.createStatement();
       let id = 1;
-      stmt.execute(`DELETE FROM ${table} WHERE idx=${id};`)
+      let query = `DELETE FROM ${table} WHERE idx=${id};`;
+      stmt.execute({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -189,7 +217,7 @@ describe('All', function() {
           value: 'admin_passwd',
         });
 
-        stmt.execute(true)
+        stmt.execute(async)
         .then(res => {
           assert.equal(res, true);
         })
@@ -201,7 +229,11 @@ describe('All', function() {
 
     it('should return false when delete() is failed', function() {
       let stmt = connection.createStatement();
-      stmt.execute(`DELETE FROM ${table};`)
+      let query = `DELETE FROM ${table};`;
+      stmt.execute({
+        query: query,
+        async: async,
+      })
       .then(res => {
         assert.equal(res, true);
       })
@@ -215,7 +247,10 @@ describe('All', function() {
         let stmt = connection.createStatement();
         let passwd = `admin_passwd${i}`;
         let query = `INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`;
-        stmt.execute({query: query, async: true})
+        stmt.execute({
+          query: query,
+          async: async
+        })
         .then(res => {
           assert.equal(res, true);
         })
@@ -227,8 +262,11 @@ describe('All', function() {
     
     it('should return false when select count(*) is failed', function() {
       let stmt = connection.createStatement();
-      
-      stmt.executeQuery(`SELECT COUNT(*) FROM ${table};`)
+      let query = `SELECT COUNT(*) FROM ${table};`;
+      stmt.executeQuery({
+        query: query,
+        async: async,
+      })
       .then(res => {
         res.next();
         assert.equal(res.data[0], 1000);
@@ -237,7 +275,5 @@ describe('All', function() {
         console.log(err);
       });
     });
-    
-
   });
 });
