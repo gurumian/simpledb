@@ -189,7 +189,7 @@ describe('All', function() {
           value: 'admin_passwd',
         });
 
-        stmt.execute()
+        stmt.execute(true)
         .then(res => {
           assert.equal(res, true);
         })
@@ -214,7 +214,8 @@ describe('All', function() {
       for(var i = 0; i < 1000; i++) {
         let stmt = connection.createStatement();
         let passwd = `admin_passwd${i}`;
-        stmt.execute(`INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`)
+        let query = `INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`;
+        stmt.execute({query: query, async: true})
         .then(res => {
           assert.equal(res, true);
         })

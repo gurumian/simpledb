@@ -9,9 +9,11 @@ Napi::FunctionReference Statement::constructor;
 Napi::Object Statement::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
+  constexpr auto name = "_Statement";
+
   Napi::Function func =
       DefineClass(env,
-                  "Statement",
+                  name,
                   {
                     InstanceMethod("execute", &Statement::Execute),
                     InstanceMethod("executeQuery", &Statement::ExecuteQuery),
@@ -20,7 +22,7 @@ Napi::Object Statement::Init(Napi::Env env, Napi::Object exports) {
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("Statement", func);
+  exports.Set(name, func);
 
   return exports;
 }

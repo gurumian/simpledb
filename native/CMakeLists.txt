@@ -53,7 +53,7 @@ include_directories(${GLOG_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GLOG_LIBRARIES})
 
 if (GLOG_FOUND)
-	# add_definitions(-DUSE_GLOG)
+add_definitions(-DUSE_GLOG)
 endif (GLOG_FOUND)
 
 set(LIBS ${LIBS} ${CMAKE_DL_LIBS})

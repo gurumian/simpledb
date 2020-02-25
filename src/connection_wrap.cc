@@ -11,9 +11,11 @@ Napi::FunctionReference Connection::constructor;
 Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
+  constexpr auto name = "_Connection";
+
   Napi::Function func =
       DefineClass(env,
-                  "Connection",
+                  name,
                   {
                     InstanceMethod("createStatement", &Connection::CreateStatement),
                     InstanceMethod("prepareStatement", &Connection::PrepareStatement),
@@ -22,7 +24,7 @@ Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("Connection", func);
+  exports.Set(name, func);
 
   return exports;
 }
