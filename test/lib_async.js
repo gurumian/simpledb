@@ -10,9 +10,9 @@ const fs = require('fs')
 const db = ':memory:'
 const table = 'admin'
 
-const async = false;
+const async = true;
 
-describe('Library (sync)', function() {
+describe('Library (async)', function() {
 
   if (fs.existsSync(db)) {
     fs.unlinkSync(db);

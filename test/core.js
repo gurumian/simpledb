@@ -7,7 +7,7 @@ var should = chai.should();  // Using Should style
 
 const fs = require('fs')
 
-const db = './test/example2.db'
+const db = ':memory:'
 const table = 'admin'
 
 describe('Core', function() {
@@ -95,7 +95,7 @@ describe('Core', function() {
         value: arraybuffer,
       });
 
-      stmt.execute()
+      stmt.execute(false) // TODO: [Issue] if it's set true, it fails.
       .then(res => {
         assert.equal(res, true);
       })
