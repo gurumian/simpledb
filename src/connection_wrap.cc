@@ -11,7 +11,7 @@ Napi::FunctionReference Connection::constructor;
 Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
-  constexpr auto name = "Connection";
+  constexpr auto name = "_Connection";
 
   Napi::Function func =
       DefineClass(env,

@@ -8,7 +8,7 @@ Napi::FunctionReference PreparedStatement::constructor;
 Napi::Object PreparedStatement::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
-  constexpr auto name = "PreparedStatement";
+  constexpr auto name = "_PreparedStatement";
 
   Napi::Function func =
       DefineClass(env,
