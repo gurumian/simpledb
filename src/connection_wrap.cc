@@ -31,6 +31,7 @@ Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
 
 Connection::Connection(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Connection>(info) {
   Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
 
   if (info.Length() <= 0 || !info[0].IsString()) {
     Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
