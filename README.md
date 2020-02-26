@@ -97,6 +97,21 @@ stmt.execute({
 })
 ```
 
+### async / await
+You can use it like this as well.
+```js
+async function removeAsync(conn) {
+  let id = 2;
+  let stmt = conn.createStatement();
+  let query = `DELETE FROM admin WHERE idx=${id};`;
+  let res = await stmt.execute({
+    query: query,
+    async: true, // (or false. You can use the both)
+  })
+  console.log(`removeAsync ${res}`);
+}
+```
+
 
 ## (Optional) Native only build
 ```bash
