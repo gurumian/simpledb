@@ -29,6 +29,7 @@ function example() {
       select2(conn)
       update(conn)
       remove(conn)
+      removeAsync(conn);
     }
   })
   .catch(err => {
@@ -124,6 +125,17 @@ function remove(conn) {
   .catch(err => {
     console.log(err);
   });
+}
+
+async function removeAsync(conn) {
+  let id = 2;
+  let stmt = conn.createStatement();
+  let query = `DELETE FROM admin WHERE idx=${id};`;
+  let res = await stmt.execute({
+    query: query,
+    async: true,
+  })
+  console.log(`removeAsync ${res}`);
 }
 
 example();
