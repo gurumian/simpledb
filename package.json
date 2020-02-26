@@ -1,7 +1,7 @@
 {
   "name": "simpledbc",
-  "version": "0.2.6",
-  "description": "Node.js sqlite3 client",
+  "version": "0.3.0",
+  "description": "Node.js sqlite3 nodejs binding",
   "main": "node/index.js",
   "files": [
     "lib",
@@ -11,6 +11,7 @@
     "CMakeLists.txt"
   ],
   "keywords": [
+    "sqlite3",
     "sqlite",
     "db",
     "database"

@@ -279,6 +279,7 @@ describe('Core', function() {
       .then(res => {
         assert.equal(res.next(), true)
         assert.equal(res.data[0], count)
+        if (fs.existsSync(db)) fs.unlinkSync(db);
       })
       .catch(err => {
         console.log(err)
