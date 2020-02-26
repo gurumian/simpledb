@@ -25,9 +25,13 @@ See `example/`
 ```js
 const {Connection} = require('simpledbc');
 
-let connection = new Connection(db);
-let stmt = connection.createStatement();
-stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`)
+let conn = new Connection(db)
+let stmt = conn.createStatement()
+let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`
+stmt.execute({
+  query: query,
+  async: true,
+})
 .then(res => {
   console.log(res);
 })
@@ -35,10 +39,13 @@ stmt.execute(`CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passw
 
 ### INSERT
 ```js
-let connection = new Connection(db);
-let stmt = connection.createStatement();
-let query =  `INSERT INTO ${table} (passwd, date) VALUES(${Math.random()},datetime(\'now\',\'localtime\'));`;
-stmt.execute(query)
+let stmt = conn.createStatement();
+let password = Math.round(Math.random() * 1000);
+let query =  `INSERT INTO ${table} (passwd, date) VALUES(${password},datetime(\'now\',\'localtime\'));`;
+stmt.execute({
+  query: query,
+  async: false,
+})
 .then(res => {
   console.log(res);
 })
@@ -46,35 +53,47 @@ stmt.execute(query)
 
 ### SELECT
 ```js
-let connection = new Connection(db);
-let stmt = connection.createStatement();
-stmt.executeQuery('SELECT idx, passwd, date FROM admin')
+let stmt = conn.createStatement();
+let query =`SELECT idx, passwd, date FROM ${table}`;
+stmt.executeQuery({
+  query: query,
+  async: true,
+})
 .then(res => {
   while(res.next()) {
-    console.log(res.data); // e.g. [ 93, '4fsdfgas3fdf' ]
-    // console.log(res.obj); // e.g. { idx: 93, passwd: '4fsdfgas3fdf' }
+    console.log(res.data);
+    // console.log(res.obj);
   }
 })
 ```
 
 ### UPDATE
 ```js
-let stmt = connection.createStatement();
+let stmt = conn.createStatement();
 let password = 'new password';
 let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
-stmt.execute(query)
+stmt.execute({
+  query: query,
+  async: true,
+})
 .then(res => {
-  console.log(res);
+  if(res) {
+    console.log(`successfully updated to ${password}`);
+  }
 })
 ```
 
 ### DELETE
 ```js
-let stmt = connection.createStatement();
 let id = 1;
-stmt.execute(`DELETE FROM admin WHERE idx=${id};`)
+let stmt = conn.createStatement();
+let query = `DELETE FROM admin WHERE idx=${id};`;
+stmt.execute({
+  query: query,
+  async: true,
+})
 .then(res => {
-  console.log(res);
+  // 
 })
 ```
 
