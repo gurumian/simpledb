@@ -1,6 +1,6 @@
 {
   "name": "simpledbc",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Node.js sqlite3 client",
   "main": "node/index.js",
   "files": [
