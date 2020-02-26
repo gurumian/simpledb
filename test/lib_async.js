@@ -315,6 +315,7 @@ describe(`Library (async: ${async})`, function() {
       .then(res => {
         res.next();
         assert.equal(res.data[0], count);
+        if (fs.existsSync(db)) fs.unlinkSync(db);
       })
       .catch(err => {
         console.log(err);
