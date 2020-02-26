@@ -155,7 +155,7 @@ describe(`Library (async: ${async})`, function() {
     it('should return error when select() is failed', function() {
       let stmt = connection.createStatement();
       let query = `SELECT idx, passwd, dump, date FROM ${table}`;
-      stmt.executeQuery({
+      stmt.execute({
         query: query,
         async: async,
       })
@@ -201,7 +201,7 @@ describe(`Library (async: ${async})`, function() {
     it('should return error when select() is failed', function() {
       let stmt = connection.createStatement();
       let query = `SELECT idx, passwd, date FROM ${table}`;
-      stmt.executeQuery({
+      stmt.execute({
         query: query,
         async: async,
       })
