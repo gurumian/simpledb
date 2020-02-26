@@ -93,8 +93,11 @@ function update(conn) {
   let stmt = conn.createStatement();
   let password = 'new password';
   let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
-  stmt.execute(query)
-  .then(res =>{
+  stmt.execute({
+    query: query,
+    async: true,
+  })
+  .then(res => {
     if(res) {
       console.log(`successfully updated to ${password}`);
     }
@@ -109,7 +112,10 @@ function remove(conn) {
   let id = 1;
   let stmt = conn.createStatement();
   let query = `DELETE FROM admin WHERE idx=${id};`;
-  stmt.execute(query)
+  stmt.execute({
+    query: query,
+    async: true,
+  })
   .then(res => {
     if(res) {
       console.log(`[${id}] deleted successfully!`);
