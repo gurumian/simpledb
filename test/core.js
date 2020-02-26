@@ -7,7 +7,7 @@ var should = chai.should();  // Using Should style
 
 const fs = require('fs')
 
-const db = ':memory:'
+const db = 'example.db'
 const table = 'admin'
 
 describe('Core', function() {
@@ -25,6 +25,7 @@ describe('Core', function() {
       stmt.execute(query)
       .then(res => {
         assert.equal(res, true);
+        assert.equal(fs.existsSync(db), true);
       })
       .catch(err => {
         console.log(err);
@@ -74,7 +75,40 @@ describe('Core', function() {
       });
     });
 
-    // PRAGMA table_info(admin)
+    it('should return false when create() is failed', function() {
+      let stmt = connection.createStatement();
+      let query = `PRAGMA table_info(${table});`;
+      stmt.executeQuery(query)
+      .then(res => {
+        assert.equal(res.next(), true);
+        let obj = res.obj;
+        assert.equal(obj.hasOwnProperty('name'), true);
+        assert.equal(obj.name, 'idx');
+        assert.equal(obj.type, 'INTEGER');
+
+        assert.equal(res.next(), true);
+        obj = res.obj;
+        assert.equal(obj.hasOwnProperty('name'), true);
+        assert.equal(obj.name, 'passwd');
+        assert.equal(obj.type, 'TEXT');
+
+        assert.equal(res.next(), true);
+        obj = res.obj;
+        assert.equal(obj.hasOwnProperty('name'), true);
+        assert.equal(obj.name, 'dump');
+        assert.equal(obj.type, 'BLOB');
+
+        assert.equal(res.next(), true);
+        obj = res.obj;
+        assert.equal(obj.hasOwnProperty('name'), true);
+        assert.equal(obj.name, 'date');
+        assert.equal(obj.type, 'DATETIME');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    });
+
     it('should return false when insert() is failed', function() {
       let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, dump, date) VALUES(?,?,datetime(\'now\',\'localtime\'));`);
       stmt.setString({
