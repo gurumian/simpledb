@@ -1,46 +1,55 @@
 'use strict'
 
-var args = process.argv.slice(2);
-console.log('args: ', args);
+const {Connection} = require('simpledbc')
+const fs = require('fs')
 
+var args = process.argv.slice(2)
 
-const {Connection} = require('simpledbc');
-
-var db = 'example.db'
+const table = 'admin'
+let db = 'example.db'
 if(args.length) {
   db = args[0];
 }
 
-const fs = require('fs')
-if (fs.existsSync(db)) {
-  fs.unlinkSync(db);
-}
+if (fs.existsSync(db)) fs.unlinkSync(db) 
 
-const table = 'admin';
 
-let connection = new Connection(db);
-
-// CREATE
-function create() {
-  let stmt = connection.createStatement();
-  let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`;
-  stmt.execute(query)
+function example() {
+  let conn = new Connection(db)
+  let stmt = conn.createStatement()
+  let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`
+  stmt.execute({
+    query: query,
+    async: true,
+  })
   .then(res => {
-    console.log(res);
+    if(res) {
+      insert(conn)
+      select(conn)
+      select2(conn)
+      update(conn)
+      remove(conn)
+    }
   })
   .catch(err => {
     console.log(err);
   });
 }
 
-// INSERT 100
-function insert() {
+function insert(conn) {
   for(var i = 0; i < 99; i++) {
-    let stmt = connection.createStatement();
-    let query =  `INSERT INTO ${table} (passwd, date) VALUES(${Math.random()},datetime(\'now\',\'localtime\'));`;
-    stmt.execute(query)
+    let stmt = conn.createStatement();
+    let password = Math.round(Math.random() * 1000);
+    let query =  `INSERT INTO ${table} (passwd, date) VALUES(${password},datetime(\'now\',\'localtime\'));`;
+    stmt.execute({
+      query: query,
+      async: false,
+    })
     .then(res => {
-      console.log(res);
+      // console.log(res);
+      if(res) {
+        console.log(`password ${password} inserted`);
+      }
     })
     .catch(err => {
       console.log(err);
@@ -49,10 +58,13 @@ function insert() {
 }
 
 // SELECT
-function select() {
-  let stmt = connection.createStatement();
+function select(conn) {
+  let stmt = conn.createStatement();
   let query =`SELECT idx, passwd, date FROM ${table}`;
-  stmt.executeQuery(query)
+  stmt.executeQuery({
+    query: query,
+    async: true,
+  })
   .then(res => {
     while(res.next()) {
       console.log(res.data);
@@ -63,8 +75,8 @@ function select() {
   });
 }
 
-function select2() {
-  let stmt = connection.createStatement();
+function select2(conn) {
+  let stmt = conn.createStatement();
   let query =`SELECT idx, passwd, date FROM ${table}`;
   stmt.executeQuery(query)
   .then(res => {
@@ -77,14 +89,15 @@ function select2() {
   });
 }
 
-// UPDATE
-function update() {
-  let stmt = connection.createStatement();
+function update(conn) {
+  let stmt = conn.createStatement();
   let password = 'new password';
   let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
   stmt.execute(query)
   .then(res =>{
-    console.log(res);
+    if(res) {
+      console.log(`successfully updated to ${password}`);
+    }
   })
   .catch(err => {
     console.log(err);
@@ -92,24 +105,19 @@ function update() {
 }
 
 
-// DELETE id=1
-function remove() {
+function remove(conn) {
   let id = 1;
-  let stmt = connection.createStatement();
+  let stmt = conn.createStatement();
   let query = `DELETE FROM admin WHERE idx=${id};`;
   stmt.execute(query)
   .then(res => {
-    console.log(res);
+    if(res) {
+      console.log(`[${id}] deleted successfully!`);
+    }
   })
   .catch(err => {
     console.log(err);
   });
 }
 
-
-create();
-insert();
-select();
-update();
-remove();
-select2();
+example();
