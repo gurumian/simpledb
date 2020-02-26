@@ -59,7 +59,7 @@ stmt.execute({
 ```js
 let stmt = conn.createStatement();
 let query =`SELECT idx, passwd, date FROM ${table}`;
-stmt.executeQuery({
+stmt.execute({
   query: query,
   async: true,
 })
