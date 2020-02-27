@@ -20,7 +20,7 @@ async function pragma() {
   let conn = new Connection(db)
   let stmt = conn.createStatement();
   let query = `PRAGMA table_info(${table});`;
-  let res = await stmt.executeQuery({
+  let res = await stmt.execute({
     query: query,
   })
 
