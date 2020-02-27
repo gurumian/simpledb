@@ -37,7 +37,7 @@ describe(`Library (async: ${async})`, function() {
     it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
       let query = `PRAGMA table_info(${table});`;
-      stmt.executeQuery({
+      stmt.execute({
         query: query,
         async: async,
       })
@@ -83,7 +83,7 @@ describe(`Library (async: ${async})`, function() {
     it('should return false when create() is failed', function() {
       let stmt = connection.createStatement();
       let query = `PRAGMA table_info(${table});`;
-      stmt.executeQuery({
+      stmt.execute({
         query: query,
         async: async,
       })
