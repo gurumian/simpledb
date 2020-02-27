@@ -1,4 +1,4 @@
-SQLite3 nodejs binding. It's simple to use and supports the both async and sync manners.
+SQLite3 nodejs binding. It's simple to use and supports the both asynchronous and synchronous manners.
 
 
 [![Dependencies](https://david-dm.org/gurumian/simpledb.svg)](https://david-dm.org/gurumian/simpledb)
