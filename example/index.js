@@ -11,131 +11,87 @@ if(args.length) {
   db = args[0];
 }
 
-if (fs.existsSync(db)) fs.unlinkSync(db) 
-
-
-function example() {
+async function create() {
   let conn = new Connection(db)
   let stmt = conn.createStatement()
   let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`
-  stmt.execute({
+  return await stmt.execute({
     query: query,
     async: true,
   })
-  .then(res => {
-    if(res) {
-      insert(conn)
-      select(conn)
-      select2(conn)
-      update(conn)
-      remove(conn)
-      removeAsync(conn);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
 }
 
-function insert(conn) {
-  for(var i = 0; i < 99; i++) {
-    let stmt = conn.createStatement();
-    let password = Math.round(Math.random() * 1000);
-    let query =  `INSERT INTO ${table} (passwd, date) VALUES(${password},datetime(\'now\',\'localtime\'));`;
-    stmt.execute({
-      query: query,
-      async: false,
-    })
-    .then(res => {
-      // console.log(res);
-      if(res) {
-        console.log(`password ${password} inserted`);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }
-}
-
-// SELECT
-function select(conn) {
-  let stmt = conn.createStatement();
-  let query =`SELECT idx, passwd, date FROM ${table}`;
-  stmt.executeQuery({
+async function select() {
+  let conn = new Connection(db)
+  let stmt = conn.createStatement()
+  let query = `SELECT idx, passwd, date FROM ${table}`;
+  return await stmt.execute({
     query: query,
-    async: true,
   })
-  .then(res => {
-    while(res.next()) {
-      console.log(res.data);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
 }
 
-function select2(conn) {
-  let stmt = conn.createStatement();
-  let query =`SELECT idx, passwd, date FROM ${table}`;
-  stmt.executeQuery(query)
-  .then(res => {
-    while(res.next()) {
-      console.log(res.obj);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
-}
-
-function update(conn) {
+async function update() {
   let stmt = conn.createStatement();
   let password = 'new password';
   let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
-  stmt.execute({
+  return await stmt.execute({
     query: query,
     async: true,
   })
-  .then(res => {
-    if(res) {
-      console.log(`successfully updated to ${password}`);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
 }
 
-
-function remove(conn) {
-  let id = 1;
-  let stmt = conn.createStatement();
-  let query = `DELETE FROM admin WHERE idx=${id};`;
-  stmt.execute({
+async function _delete() {
+  let conn = new Connection(db)
+  let stmt = conn.createStatement()
+  let id = 1
+  let query = `DELETE FROM ${table} WHERE idx=${id};`;
+  return await stmt.execute({
     query: query,
-    async: true,
   })
-  .then(res => {
-    if(res) {
-      console.log(`[${id}] deleted successfully!`);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
 }
 
-async function removeAsync(conn) {
-  let id = 2;
-  let stmt = conn.createStatement();
-  let query = `DELETE FROM admin WHERE idx=${id};`;
-  let res = await stmt.execute({
-    query: query,
-    async: true,
-  })
-  console.log(`removeAsync ${res}`);
+if (!fs.existsSync(db)) {
+  let res = create();
+  if(!res) throw 'error on create'
 }
 
-example();
+
+let conn = new Connection(db)
+let stmt = conn.createStatement()
+let passwd = `admin_passwd`;
+let query = `INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`
+stmt.execute({
+  query: query,
+})
+.then(res => {
+  if(!res) throw 'error on select'
+  return select()
+})
+.then(res => {
+  while(res.next()) {
+    console.log(res.data)
+  }
+
+  // update
+  if(! update()) throw 'error on update'
+  return select()
+})
+.then(res => {
+  console.log('after update')
+  while(res.next()) {
+    console.log(res.data)
+  }
+
+  // delete
+  if( !_delete()) throw 'error on delete'
+  return select()
+})
+.then(res => {
+  console.log('after delete')
+  while(res.next()) {
+    console.log(res.data)
+  }
+})
+.catch(err => {
+  console.log(err)
+}) 
