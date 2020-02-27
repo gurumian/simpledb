@@ -21,9 +21,7 @@ async function insert() {
   let stmt = conn.createStatement()
   let passwd = `admin_passwd`;
   let query = `INSERT INTO ${table} (passwd, date) VALUES(\'${passwd}\',datetime(\'now\',\'localtime\'));`
-  let res = await stmt.execute({
-    query: query,
-  })
+  let res = await stmt.execute(query)
 
   if(res) {
     console.log('successfully inserted!');

@@ -32,10 +32,7 @@ const {Connection} = require('simpledbc');
 let conn = new Connection(db)
 let stmt = conn.createStatement()
 let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`
-stmt.execute({
-  query: query,
-  async: true,
-})
+stmt.execute(query)
 .then(res => {
   console.log(res);
 })
@@ -46,10 +43,7 @@ stmt.execute({
 let stmt = conn.createStatement();
 let password = Math.round(Math.random() * 1000);
 let query =  `INSERT INTO ${table} (passwd, date) VALUES(${password},datetime(\'now\',\'localtime\'));`;
-stmt.execute({
-  query: query,
-  async: false,
-})
+stmt.execute(query)
 .then(res => {
   console.log(res);
 })
@@ -59,10 +53,7 @@ stmt.execute({
 ```js
 let stmt = conn.createStatement();
 let query =`SELECT idx, passwd, date FROM ${table}`;
-stmt.execute({
-  query: query,
-  async: true,
-})
+stmt.execute(query)
 .then(res => {
   while(res.next()) {
     console.log(res.data);
@@ -76,10 +67,7 @@ stmt.execute({
 let stmt = conn.createStatement();
 let password = 'new password';
 let query = `UPDATE ${table} set passwd=\'${password}\', date=datetime(\'now\',\'localtime\') WHERE idx=1;`;
-stmt.execute({
-  query: query,
-  async: true,
-})
+stmt.execute(query)
 .then(res => {
   if(res) {
     console.log(`successfully updated to ${password}`);
@@ -92,10 +80,7 @@ stmt.execute({
 let id = 1;
 let stmt = conn.createStatement();
 let query = `DELETE FROM admin WHERE idx=${id};`;
-stmt.execute({
-  query: query,
-  async: true,
-})
+stmt.execute(query)
 .then(res => {
   // 
 })
@@ -108,10 +93,7 @@ async function removeAsync(conn) {
   let id = 2;
   let stmt = conn.createStatement();
   let query = `DELETE FROM admin WHERE idx=${id};`;
-  let res = await stmt.execute({
-    query: query,
-    async: true, // (or false. You can use the both)
-  })
+  let res = await stmt.execute(query)
   console.log(`removeAsync ${res}`);
 }
 ```
