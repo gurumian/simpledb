@@ -8,7 +8,7 @@ var args = process.argv.slice(2)
 const table = 'admin'
 let db = 'example.db'
 if(args.length) {
-  db = args[0];
+  db = args[0]
 }
 
 if (fs.existsSync(db)) fs.unlinkSync(db) 
@@ -20,8 +20,8 @@ async function create() {
   let res = await stmt.execute(query)
   
   if(res) {
-    console.log('successfully created!');
+    console.log('successfully created!')
   }
 }
 
-create();
+create()
