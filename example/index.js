@@ -53,6 +53,8 @@ function _delete() {
 if (!fs.existsSync(db)) {
   let res = create();
   if(!res) throw 'error on create'
+
+  console.log(`\"${db}\" has been created!`)
 }
 
 
@@ -64,7 +66,7 @@ stmt.execute({
   query: query,
 })
 .then(res => {
-  if(!res) throw 'error on select'
+  if(!res) throw 'error on insert'
   return select()
 })
 .then(res => {
@@ -77,7 +79,7 @@ stmt.execute({
   return select()
 })
 .then(res => {
-  console.log('after update')
+  console.log('select after update')
   while(res.next()) {
     console.log(res.data)
   }
@@ -87,7 +89,7 @@ stmt.execute({
   return select()
 })
 .then(res => {
-  console.log('after delete')
+  console.log('select after delete where id=1')
   while(res.next()) {
     console.log(res.data)
   }
