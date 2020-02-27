@@ -17,10 +17,7 @@ async function create() {
   let conn = new Connection(db)
   let stmt = conn.createStatement()
   let query = `CREATE TABLE ${table}(idx INTEGER PRIMARY KEY AUTOINCREMENT, passwd TEXT, date DATETIME);`
-  let res = await stmt.execute({
-    query: query,
-    async: true,
-  })
+  let res = await stmt.execute(query)
   
   if(res) {
     console.log('successfully created!');

@@ -40,9 +40,7 @@ function select_thenable() {
   let conn = new Connection(db)
   let stmt = conn.createStatement()
   let query = `SELECT * FROM ${table}`;
-  stmt.execute({
-    query: query,
-  })
+  stmt.execute(query)
   .then(res => {
     let now = Date.now();
     while(res.next()) {

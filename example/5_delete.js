@@ -21,9 +21,7 @@ async function _delete() {
   let stmt = conn.createStatement()
   let id = 1
   let query = `DELETE FROM ${table} WHERE idx=${id};`;
-  let res = await stmt.execute({
-    query: query,
-  })
+  let res = await stmt.execute(query)
 
   if(res) {
     console.log('successfully deleted! run node 4_select.js to see if it\'s done');
