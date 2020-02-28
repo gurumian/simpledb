@@ -253,7 +253,7 @@ describe(`Library (async: ${async})`, function() {
   let count = 1000;
   describe('Performance', function() {
     it('should return false when insert() is failed', function() {
-      for(var i = 0; i < 1000; i++) {
+      for(var i = 0; i < count; i++) {
         let stmt = connection.prepareStatement(`INSERT INTO ${table} (passwd, date) VALUES(?,datetime(\'now\',\'localtime\'));`);
         stmt.setString({
           index: 1,
