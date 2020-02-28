@@ -1,6 +1,6 @@
 SQLite3 nodejs binding. It's simple to use and supports the both asynchronous and synchronous manners.
 
-
+![Node.js CI](https://github.com/gurumian/simpledb/workflows/Node.js%20CI/badge.svg)
 [![Dependencies](https://david-dm.org/gurumian/simpledb.svg)](https://david-dm.org/gurumian/simpledb)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgurumian%2Fsimpledb.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgurumian%2Fsimpledb?ref=badge_shield)
 
