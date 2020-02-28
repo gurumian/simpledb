@@ -7,7 +7,7 @@ var should = chai.should()  // Using Should style
 
 const fs = require('fs')
 
-const db = 'example.db'
+const db = ':memory:'
 const table = 'admin'
 
 describe('Core', function() {

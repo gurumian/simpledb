@@ -8,7 +8,7 @@ var should = chai.should();  // Using Should style
 const fs = require('fs')
 
 const async = false;
-const db = `./example_async_${async}.db`
+const db = ':memory:'
 const table = 'admin'
 
 
