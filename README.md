@@ -11,9 +11,10 @@ apt install libsqlite3-dev
 (or brew)
 ```
 
-You may need to install `cmake-js` as well
+You may need to install `cmake-js` and `typescript`
 ```
 npm i -g cmake-js
+npm i -g typescript
 ```
 
 
