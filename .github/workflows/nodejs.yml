@@ -19,6 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: sudo apt-get install -y libsqlite3-dev libgoogle-glog-dev
     - run: npm install -g cmake-js      
+    - run: npm install -g typescript
     - run: npm install
     - run: npm run build --if-present
     - run: npm test

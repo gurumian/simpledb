@@ -1,8 +1,9 @@
 {
   "name": "simpledbc",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Node.js sqlite3 nodejs binding",
-  "main": "node/index.js",
+  "main": "index.js",
+  "types": "lib/connetion.d.ts",
   "files": [
     "lib",
     "index.js",
@@ -28,7 +29,7 @@
     "node-addon-api": "^2.0.0"
   },
   "scripts": {
-    "install": "cmake-js compile",
+    "install": "cmake-js compile && tsc",
     "test": "mocha"
   },
   "gypfile": true,
@@ -41,6 +42,7 @@
     "url": "git+https://github.com/gurumian/simpledb.git"
   },
   "devDependencies": {
+    "@types/node": "^13.9.0",
     "chai": "^4.2.0",
     "cmake-js": "^6.0.0",
     "mocha": "^7.0.1"
