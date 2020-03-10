@@ -5,9 +5,11 @@
     "types": ["node"],
     "declaration": true,
     "sourceMap": true,
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "outDir": "./dist"
   },
   "include": [
     "lib/**/*",
+    "index.ts"
   ]
 }
