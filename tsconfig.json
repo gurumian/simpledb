@@ -2,16 +2,12 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
+    "types": ["node"],
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "typeRoots": ["node_modules/@types"]
   },
   "include": [
     "lib/**/*",
-  ],
-  "files": [
-    "./node_modules/@types/node/index.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }

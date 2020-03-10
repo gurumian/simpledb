@@ -1,6 +1,6 @@
 {
   "name": "simpledbc",
-  "version": "0.4.5",
+  "version": "0.4.12",
   "description": "Node.js sqlite3 nodejs binding",
   "main": "index.js",
   "types": "lib/connetion.d.ts",
@@ -9,7 +9,8 @@
     "index.js",
     "native",
     "src",
-    "CMakeLists.txt"
+    "CMakeLists.txt",
+    "tsconfig.json"
   ],
   "keywords": [
     "sqlite3",
@@ -25,6 +26,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^13.9.0",
     "bindings": "^1.5.0",
     "node-addon-api": "^2.0.0"
   },
@@ -42,9 +44,9 @@
     "url": "git+https://github.com/gurumian/simpledb.git"
   },
   "devDependencies": {
-    "@types/node": "^13.9.0",
     "chai": "^4.2.0",
     "cmake-js": "^6.0.0",
-    "mocha": "^7.0.1"
+    "mocha": "^7.0.1",
+    "typescript": "^3.8.3"
   }
 }
